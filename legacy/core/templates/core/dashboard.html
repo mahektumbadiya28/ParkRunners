@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4 border-0 rounded-3 bg-white mb-4">
+            <h4 class="fw-bold text-dark mb-3">🗺️ Interactive Parking Grid</h4>
+            <div class="list-group">
+                <div class="list-group-item list-group-item-action py-3">
+                    <h6 class="fw-bold mb-1 text-success">🟢 John's Driveway Spot</h6>
+                    <small class="text-muted">Coordinates: 37.78825, -122.4324 | Price: $12.00/hr</small>
+                </div>
+                <div class="list-group-item list-group-item-action py-3">
+                    <h6 class="fw-bold mb-1 text-primary">🔵 Central Mall Valet Hub</h6>
+                    <small class="text-muted">Coordinates: 37.78925, -122.4344 | Price: $35.00/hr</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4 border-0 rounded-3 bg-white">
+            <h4 class="fw-bold text-dark mb-3">🤖 AI Car Condition Auditor</h4>
+            <p class="text-secondary small">Upload an image file directly to verify YOLO convolutional layer processing via your browser environment.</p>
+            <form action="/ai/scan-damage" method="POST" enctype="multipart/form-data" target="_blank">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input class="form-control" type="file" name="file" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-purple w-100 py-2 fw-bold text-white shadow-sm" style="background-color: #8B5CF6;">
+                    🧠 Run YOLO Neural Audit
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
