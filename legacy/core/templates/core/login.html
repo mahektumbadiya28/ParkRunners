@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow border-0 p-4 rounded-3 bg-white">
+            <h3 class="fw-bold mb-3 text-dark">Secure Gateway Access</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-bold">USERNAME</label>
+                    <input type="text" name="username" class="form-control py-2" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-bold">PASSWORD</label>
+                    <input type="password" name="password" class="form-control py-2" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Authenticate Web Session</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
