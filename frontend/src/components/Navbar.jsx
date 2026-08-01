@@ -35,9 +35,7 @@ export default function Navbar({ transparent = false }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between" style={{ height: 68 }}>
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 transition-all">
-              <MapPin className="w-5 h-5 text-white" />
-            </div>
+            <MapPin className="w-6 h-6 text-indigo-500" />
             <span className="text-lg font-black tracking-tight gradient-text">VOLENPARK</span>
           </Link>
 
