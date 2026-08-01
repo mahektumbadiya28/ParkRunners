@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Car, Clock, CheckCircle, LayoutDashboard, Settings, Briefcase } from 'lucide-react';
+import { Car, Clock, CheckCircle, LayoutDashboard, Settings, Briefcase, User } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
@@ -9,16 +9,11 @@ import Button from '../components/ui/Button';
 import { listAvailableJobs, bookingAction } from '../services/parking';
 import { io } from 'socket.io-client';
 
-const NAV = [
-  { icon: LayoutDashboard, label: 'Dashboard', to: '/valet' },
-  { icon: Briefcase, label: 'Available Jobs', to: '/valet' },
-  { icon: Settings, label: 'Settings', to: '/valet' },
-];
-
 export default function ValetDashboard() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(true);
+  const [activeTab, setActiveTab] = useState('dashboard');
   // const [actionLoading, setActionLoading] = useState(null);
   const navigate = useNavigate();
 
@@ -51,22 +46,48 @@ export default function ValetDashboard() {
   }, []);
 
   const handleAction = async (id, action) => {
-    setActionLoading(id + action);
+    // setActionLoading(id + action);
     try { await bookingAction(id, action); fetchJobs(); }
     catch (e) { alert('Action failed: ' + e.message); }
-    finally { setActionLoading(null); }
+    // finally { setActionLoading(null); }
   };
 
   const accepted = jobs.filter(j => j.bookingStatus === 'confirmed' || j.bookingStatus === 'active').length;
   const pending = jobs.filter(j => j.bookingStatus === 'pending').length;
 
+  const SIDEBAR_ITEMS = [
+    { icon: Briefcase, label: 'Available Jobs', activeId: 'jobs' },
+  ];
+
+  const TOP_NAV_ITEMS = [
+    { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
+    { icon: User, label: 'Profile', activeId: 'profile' },
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
+  ];
+
   return (
-    <DashboardLayout navItems={NAV} title="Valet Command">
-      <div className="mb-8 flex justify-between items-start">
-        <div>
-          <h2 className="text-2xl font-black text-[var(--text-primary)]">Job Board 🔑</h2>
-          <p className="text-[var(--text-muted)] mt-1">Accept jobs, inspect vehicles, and complete bookings.</p>
-        </div>
+    <DashboardLayout 
+      title=""
+      navItems={SIDEBAR_ITEMS.map(item => item.activeId ? {
+        icon: item.icon,
+        label: item.label,
+        onClick: () => setActiveTab(item.activeId),
+        active: activeTab === item.activeId
+      } : { icon: item.icon, label: item.label, to: item.to })}
+      topNavItems={TOP_NAV_ITEMS.map(item => ({
+        icon: item.icon,
+        label: item.label,
+        onClick: () => setActiveTab(item.activeId),
+        active: activeTab === item.activeId
+      }))}
+    >
+      {activeTab === 'dashboard' && (
+        <>
+          <div className="mb-8 flex justify-between items-start">
+            <div>
+              <h2 className="text-2xl font-black text-[var(--text-primary)]">Job Board</h2>
+              <p className="text-[var(--text-muted)] mt-1">Accept jobs, inspect vehicles, and complete bookings.</p>
+            </div>
 
         <div className="flex items-center gap-3 bg-[var(--bg-card)] border border-[var(--border-color)] px-4 py-2 rounded-xl">
           <span className={`w-3 h-3 rounded-full ${isOnline ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]' : 'bg-gray-400'}`}></span>
@@ -146,6 +167,29 @@ export default function ValetDashboard() {
           ))
         )}
       </div>
+        </>
+      )}
+
+      {activeTab === 'jobs' && (
+        <div className="card-premium p-6 text-center">
+          <Car className="w-10 h-10 mx-auto mb-3 text-[var(--text-muted)] opacity-40" />
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">Available Jobs</h3>
+          <p className="text-[var(--text-muted)]">Check your dashboard for active jobs.</p>
+          <Button size="sm" onClick={() => setActiveTab('dashboard')} className="mt-4">Go to Dashboard</Button>
+        </div>
+      )}
+      {activeTab === 'profile' && (
+        <div className="card-premium p-6">
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Valet Profile</h3>
+          <p className="text-[var(--text-muted)]">Profile settings are coming soon.</p>
+        </div>
+      )}
+      {activeTab === 'settings' && (
+        <div className="card-premium p-6">
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Account Settings</h3>
+          <p className="text-[var(--text-muted)]">Account settings are coming soon.</p>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

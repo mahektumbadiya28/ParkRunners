@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Car, MapPin, Clock, CheckCircle, XCircle, LayoutDashboard, Settings } from 'lucide-react';
+import { Car, MapPin, Clock, CheckCircle, XCircle, LayoutDashboard, Settings, User } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
@@ -11,13 +11,6 @@ import { listMyBookings, bookingAction } from '../services/parking';
 const statusVariant = {
   pending: 'warning', confirmed: 'info', completed: 'success', cancelled: 'danger',
 };
-
-const NAV = [
-  { icon: LayoutDashboard, label: 'Dashboard', to: '/owner' },
-  { icon: MapPin, label: 'Find Parking', to: '/map' },
-  { icon: Car, label: 'My Vehicles', to: '/owner' },
-  { icon: Settings, label: 'Settings', to: '/owner' },
-];
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -29,6 +22,7 @@ export default function OwnerDashboard() {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   const fetchBookings = async () => {
     try {
@@ -52,13 +46,40 @@ export default function OwnerDashboard() {
     catch (e) { alert(e.message); }
   };
 
+  const SIDEBAR_ITEMS = [
+    { icon: MapPin, label: 'Find Parking', to: '/map' },
+    { icon: Car, label: 'My Vehicles', activeId: 'vehicles' },
+  ];
+
+  const TOP_NAV_ITEMS = [
+    { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
+    { icon: User, label: 'Profile', activeId: 'profile' },
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
+  ];
+
   return (
-    <DashboardLayout navItems={NAV} title="Dashboard">
-      {/* Welcome */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-black text-[var(--text-primary)]">Your Parking Hub 🚗</h2>
-        <p className="text-[var(--text-muted)] mt-1">Track bookings, find spots, and manage your garage from one place.</p>
-      </div>
+    <DashboardLayout 
+      title=""
+      navItems={SIDEBAR_ITEMS.map(item => item.activeId ? {
+        icon: item.icon,
+        label: item.label,
+        onClick: () => setActiveTab(item.activeId),
+        active: activeTab === item.activeId
+      } : { icon: item.icon, label: item.label, to: item.to })}
+      topNavItems={TOP_NAV_ITEMS.map(item => ({
+        icon: item.icon,
+        label: item.label,
+        onClick: () => setActiveTab(item.activeId),
+        active: activeTab === item.activeId
+      }))}
+    >
+      {activeTab === 'dashboard' && (
+        <>
+          {/* Welcome */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-black text-[var(--text-primary)]">Your Parking Hub</h2>
+            <p className="text-[var(--text-muted)] mt-1">Track bookings, find spots, and manage your garage from one place.</p>
+          </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -133,6 +154,27 @@ export default function OwnerDashboard() {
           </div>
         )}
       </motion.div>
+        </>
+      )}
+
+      {activeTab === 'vehicles' && (
+        <div className="card-premium p-6">
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">My Vehicles</h3>
+          <p className="text-[var(--text-muted)]">Vehicle management is coming soon.</p>
+        </div>
+      )}
+      {activeTab === 'profile' && (
+        <div className="card-premium p-6">
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Owner Profile</h3>
+          <p className="text-[var(--text-muted)]">Profile settings are coming soon.</p>
+        </div>
+      )}
+      {activeTab === 'settings' && (
+        <div className="card-premium p-6">
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Account Settings</h3>
+          <p className="text-[var(--text-muted)]">Account settings are coming soon.</p>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

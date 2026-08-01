@@ -162,7 +162,7 @@ export default function Register() {
                       <Car className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-[var(--text-primary)] mb-3">Car Owner</h3>
-                    <p className="text-[var(--text-muted)] text-sm leading-relaxed">Book smart parking spots, track your vehicle, and request valet services instantly.</p>
+                    <p className="text-[var(--text-muted)] text-sm leading-relaxed text-justify">Book smart parking spots, track your vehicle, and request valet services instantly.</p>
                   </button>
 
                   {/* Provider Card */}
@@ -174,7 +174,7 @@ export default function Register() {
                       <Home className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-[var(--text-primary)] mb-3">Parking Provider</h3>
-                    <p className="text-[var(--text-muted)] text-sm leading-relaxed">List your parking spaces, manage bookings, and earn money easily.</p>
+                    <p className="text-[var(--text-muted)] text-sm leading-relaxed text-justify">List your parking spaces, manage bookings, and earn money easily.</p>
                   </button>
 
                   {/* Valet Card */}
@@ -186,7 +186,7 @@ export default function Register() {
                       <ClipboardList className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-[var(--text-primary)] mb-3">Valet Driver</h3>
-                    <p className="text-[var(--text-muted)] text-sm leading-relaxed">Accept pickup jobs, manage vehicle tracking, and earn daily.</p>
+                    <p className="text-[var(--text-muted)] text-sm leading-relaxed text-justify">Accept pickup jobs, manage vehicle tracking, and earn daily.</p>
                   </button>
 
                 </div>

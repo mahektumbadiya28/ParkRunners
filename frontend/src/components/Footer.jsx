@@ -18,9 +18,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-2.5 mb-4 w-fit">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <MapPin className="w-5 h-5 text-white" />
-              </div>
+              <MapPin className="w-6 h-6 text-indigo-500" />
               <span className="text-lg font-black gradient-text">VOLENPARK</span>
             </Link>
             <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-xs">

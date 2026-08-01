@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, MapPin, BarChart3, TrendingUp, ShieldAlert, LayoutDashboard, Settings } from 'lucide-react';
+import { Users, MapPin, BarChart3, TrendingUp, ShieldAlert, LayoutDashboard, Settings, User } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
@@ -9,14 +9,6 @@ import API from '../services/api';
 import AdminUsers from './AdminUsers';
 import AdminBookings from './AdminBookings';
 import AdminSettings from './AdminSettings';
-
-const NAV = [
-  { icon: LayoutDashboard, label: 'Overview', to: '/admin' },
-  { icon: Users, label: 'Users', to: '/admin' },
-  { icon: MapPin, label: 'Spots', to: '/admin' },
-  { icon: BarChart3, label: 'Analytics', to: '/admin' },
-  { icon: Settings, label: 'Settings', to: '/admin' },
-];
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
@@ -34,29 +26,37 @@ export default function AdminDashboard() {
     })();
   }, []);
 
-  const TABS = ['overview', 'users', 'bookings', 'settings', 'approvals'];
+  const SIDEBAR_ITEMS = [
+    { icon: Users, label: 'Users', activeId: 'users' },
+    { icon: MapPin, label: 'Spots', activeId: 'approvals' },
+    { icon: BarChart3, label: 'Bookings', activeId: 'bookings' },
+  ];
+
+  const TOP_NAV_ITEMS = [
+    { icon: LayoutDashboard, label: 'Overview', activeId: 'overview' },
+    { icon: User, label: 'Profile', activeId: 'profile' },
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
+  ];
 
   return (
-    <DashboardLayout navItems={NAV} title="Admin Console">
+    <DashboardLayout 
+      title=""
+      navItems={SIDEBAR_ITEMS.map(item => ({
+        icon: item.icon,
+        label: item.label,
+        onClick: () => setActiveTab(item.activeId),
+        active: activeTab === item.activeId
+      }))}
+      topNavItems={TOP_NAV_ITEMS.map(item => ({
+        icon: item.icon,
+        label: item.label,
+        onClick: () => setActiveTab(item.activeId),
+        active: activeTab === item.activeId
+      }))}
+    >
       <div className="mb-8">
-        <h2 className="text-2xl font-black text-[var(--text-primary)]">Command Center ⚡</h2>
+        <h2 className="text-2xl font-black text-[var(--text-primary)]">Command Center</h2>
         <p className="text-[var(--text-muted)] mt-1">Monitor platform health, manage users, and configure settings.</p>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-[var(--bg-card-hover)] p-1 rounded-xl mb-8 w-fit overflow-x-auto max-w-full no-scrollbar">
-        {TABS.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2 rounded-lg text-sm font-semibold capitalize whitespace-nowrap transition-all ${activeTab === tab
-                ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-              }`}
-          >
-            {tab}
-          </button>
-        ))}
       </div>
 
       {activeTab === 'overview' && (
@@ -119,6 +119,12 @@ export default function AdminDashboard() {
           <ShieldAlert className="w-10 h-10 mx-auto mb-3 text-[var(--text-muted)] opacity-40" />
           <p className="font-semibold text-[var(--text-primary)]">Approval System</p>
           <p className="text-sm text-[var(--text-muted)]">Spot approval controls will be displayed here.</p>
+        </div>
+      )}
+      {activeTab === 'profile' && (
+        <div className="card-premium p-6">
+          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Admin Profile</h3>
+          <p className="text-[var(--text-muted)]">Profile settings are coming soon.</p>
         </div>
       )}
     </DashboardLayout>

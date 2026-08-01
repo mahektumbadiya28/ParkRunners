@@ -150,14 +150,17 @@ export default function ProviderDashboard() {
   };
 
   // Nav Items
-  const NAV_ITEMS = [
-    { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
+  const SIDEBAR_ITEMS = [
     { icon: MapPin, label: 'My Spaces', activeId: 'spaces' },
     { icon: Plus, label: 'Add Parking Space', activeId: 'add-space' },
     { icon: Calendar, label: 'Bookings', activeId: 'bookings' },
     { icon: CreditCard, label: 'Earnings', activeId: 'earnings' },
     { icon: BarChart3, label: 'Analytics', activeId: 'analytics' },
     { icon: MessageSquare, label: 'Reviews', activeId: 'reviews' },
+  ];
+
+  const TOP_NAV_ITEMS = [
+    { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
     { icon: User, label: 'Profile', activeId: 'profile' },
     { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
@@ -177,13 +180,19 @@ export default function ProviderDashboard() {
 
   return (
     <DashboardLayout
-      navItems={NAV_ITEMS.map(item => ({
+      navItems={SIDEBAR_ITEMS.map(item => ({
         icon: item.icon,
         label: item.label,
         onClick: () => setActiveTab(item.activeId),
         active: activeTab === item.activeId
       }))}
-      title="VolenPark Partner Hub"
+      topNavItems={TOP_NAV_ITEMS.map(item => ({
+        icon: item.icon,
+        label: item.label,
+        onClick: () => setActiveTab(item.activeId),
+        active: activeTab === item.activeId
+      }))}
+      title=""
     >
       {/* Toast Alert */}
       <AnimatePresence>
@@ -207,15 +216,15 @@ export default function ProviderDashboard() {
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <h2 className="text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
-              {activeTab === 'dashboard' && 'Welcome Back, Host! 👋'}
-              {activeTab === 'spaces' && 'Manage Parking Spaces 🏠'}
-              {activeTab === 'add-space' && 'Onboard New Space 🚀'}
-              {activeTab === 'bookings' && 'Reservations & Slots 📅'}
-              {activeTab === 'earnings' && 'Earning Records 💰'}
-              {activeTab === 'analytics' && 'Performance & AI Forecasts 📊'}
-              {activeTab === 'reviews' && 'Customer Experience 💬'}
-              {activeTab === 'profile' && 'Business Profile Verification 🛡️'}
-              {activeTab === 'settings' && 'Account Settings ⚙️'}
+              {activeTab === 'dashboard' && 'Welcome Back, Host!'}
+              {activeTab === 'spaces' && 'Manage Parking Spaces'}
+              {activeTab === 'add-space' && 'Onboard New Space'}
+              {activeTab === 'bookings' && 'Reservations & Slots'}
+              {activeTab === 'earnings' && 'Earning Records'}
+              {activeTab === 'analytics' && 'Performance & AI Forecasts'}
+              {activeTab === 'reviews' && 'Customer Experience'}
+              {activeTab === 'profile' && 'Business Profile Verification'}
+              {activeTab === 'settings' && 'Account Settings'}
             </h2>
             <p className="text-[var(--text-muted)] mt-1">
               {activeTab === 'dashboard' && 'Here is a quick look at your rental activities and AI business insights.'}
@@ -257,7 +266,7 @@ export default function ProviderDashboard() {
                     <div>
                       <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-wider">Total Spaces</p>
                       <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">{totalSpots}</h3>
-                      <p className="text-xs text-indigo-400 font-semibold mt-1">🏠 {approvedSpots} Approved</p>
+                      <p className="text-xs text-indigo-400 font-semibold mt-1">{approvedSpots} Approved</p>
                     </div>
                     <div className="p-3.5 rounded-2xl bg-indigo-500/10 text-indigo-400">
                       <MapPin className="w-6 h-6" />
@@ -281,7 +290,7 @@ export default function ProviderDashboard() {
                     <div>
                       <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-wider">Total Bookings</p>
                       <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">{bookings.length}</h3>
-                      <p className="text-xs text-cyan-400 font-semibold mt-1">📅 {analytics?.stats?.todayBookings || 0} Today</p>
+                      <p className="text-xs text-cyan-400 font-semibold mt-1">{analytics?.stats?.todayBookings || 0} Today</p>
                     </div>
                     <div className="p-3.5 rounded-2xl bg-cyan-500/10 text-cyan-400">
                       <Calendar className="w-6 h-6" />

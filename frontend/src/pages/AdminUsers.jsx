@@ -67,7 +67,7 @@ export default function AdminUsers() {
                 <tr key={u._id} className="border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-card-hover)] transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                         {u.fullName?.[0]?.toUpperCase() || 'U'}
                       </div>
                       <span className="font-semibold text-[var(--text-primary)]">{u.fullName}</span>

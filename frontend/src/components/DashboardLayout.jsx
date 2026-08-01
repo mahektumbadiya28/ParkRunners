@@ -8,25 +8,37 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
-function NavItem({ icon: Icon, label, to, active }) {
-  return (
-    <Link
-      to={to}
-      className={`
-        flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all
-        ${active
-          ? 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/15'
-          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]'}
-      `}
-    >
+function NavItem({ icon: Icon, label, to, active, onClick }) {
+  const className = `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+    active
+      ? 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/15'
+      : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]'
+  }`;
+
+  const content = (
+    <>
       <Icon className={`w-4.5 h-4.5 ${active ? 'text-indigo-500' : ''}`} />
       {label}
       {active && <ChevronRight className="w-3.5 h-3.5 ml-auto text-indigo-400" />}
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button onClick={onClick} className={`w-full text-left ${className}`}>
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <Link to={to} className={className}>
+      {content}
     </Link>
   );
 }
 
-export default function DashboardLayout({ children, navItems = [], title = '' }) {
+export default function DashboardLayout({ children, navItems = [], topNavItems = [], title = '' }) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -46,32 +58,17 @@ export default function DashboardLayout({ children, navItems = [], title = '' })
   const Sidebar = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-5 py-6 border-b border-[var(--border-color)]">
+      <div className="px-5 py-6">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg`}>
-            <MapPin className="w-5 h-5 text-white" />
-          </div>
+          <MapPin className="w-6 h-6 text-indigo-500" />
           <span className="font-black gradient-text text-lg tracking-tight">VOLENPARK</span>
         </Link>
       </div>
 
-      {/* User Badge */}
-      <div className="mx-4 my-4 p-3 rounded-2xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/15">
-        <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-black text-sm flex-shrink-0`}>
-            {user?.name?.[0]?.toUpperCase() || 'U'}
-          </div>
-          <div className="min-w-0">
-            <p className="font-bold text-sm text-[var(--text-primary)] truncate">{user?.name || 'User'}</p>
-            <p className="text-xs text-indigo-500 font-semibold capitalize">{user?.role}</p>
-          </div>
-        </div>
-      </div>
-
       {/* Nav */}
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-        {navItems.map(item => (
-          <NavItem key={item.to} {...item} active={location.pathname === item.to} />
+        {navItems.map((item, index) => (
+          <NavItem key={item.to || index} {...item} active={item.active !== undefined ? item.active : location.pathname === item.to} />
         ))}
       </nav>
 
@@ -129,20 +126,53 @@ export default function DashboardLayout({ children, navItems = [], title = '' })
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Bar */}
-        <header className="h-16 flex items-center justify-between px-6 bg-[var(--bg-card)] border-b border-[var(--border-color)] flex-shrink-0">
-          <div className="flex items-center gap-4">
+        <header className="h-16 flex items-center justify-between px-6 bg-[var(--bg-card)] border-b border-[var(--border-color)] flex-shrink-0 relative">
+          
+          <div className="flex items-center gap-4 flex-1">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-xl hover:bg-[var(--bg-card-hover)] transition-all">
               <Menu className="w-5 h-5 text-[var(--text-secondary)]" />
             </button>
             {title && <h1 className="text-lg font-bold text-[var(--text-primary)] hidden sm:block">{title}</h1>}
           </div>
-          <div className="flex items-center gap-2">
-            <button className="relative p-2.5 rounded-xl hover:bg-[var(--bg-card-hover)] transition-all text-[var(--text-muted)]">
+            
+          {/* Top Nav Items */}
+          {topNavItems.length > 0 && (
+            <nav className="hidden md:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
+              {topNavItems.map((item, index) => {
+                const active = item.active !== undefined ? item.active : location.pathname === item.to;
+                const content = (
+                  <span className="flex items-center gap-2">
+                    <item.icon className="w-4 h-4" />
+                    {item.label}
+                  </span>
+                );
+                const cls = `px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  active
+                    ? 'bg-indigo-500/10 text-indigo-500'
+                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]'
+                }`;
+
+                if (item.onClick) {
+                  return <button key={item.to || index} onClick={item.onClick} className={cls}>{content}</button>;
+                }
+                return <Link key={item.to || index} to={item.to} className={cls}>{content}</Link>;
+              })}
+            </nav>
+          )}
+
+          <div className="flex items-center gap-4 flex-1 justify-end">
+            <button className="relative p-2.5 rounded-full hover:bg-[var(--bg-card-hover)] transition-all text-[var(--text-muted)]">
               <Bell className="w-5 h-5" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[var(--bg-card)]" />
             </button>
-            <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold text-sm cursor-pointer`}>
-              {user?.name?.[0]?.toUpperCase() || 'U'}
+            <div className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full bg-[var(--bg-card-hover)] border border-[var(--border-color)] cursor-pointer hover:border-indigo-500/30 transition-all">
+              <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+                {user?.name?.[0]?.toUpperCase() || 'U'}
+              </div>
+              <div className="hidden sm:flex flex-col">
+                <span className="text-sm font-bold text-[var(--text-primary)] leading-none mb-1">{user?.name || 'User'}</span>
+                <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider leading-none">{user?.role}</span>
+              </div>
             </div>
           </div>
         </header>
