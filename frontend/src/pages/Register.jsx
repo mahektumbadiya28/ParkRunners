@@ -28,6 +28,7 @@ export default function Register() {
     const urlRole = searchParams.get('role');
     if (urlRole && ['owner', 'provider', 'valet'].includes(urlRole)) {
       setRole(urlRole);
+      setStep(2);
     }
   }, [searchParams]);
 

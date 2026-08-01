@@ -151,8 +151,10 @@ export default function LandingPage() {
             className="mt-12 flex items-center justify-center gap-3"
           >
             <div className="flex -space-x-2">
-              {['🧑‍💼','👩‍💻','🧑‍🔬','👩‍🎨','🧑‍🚀'].map((e, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-[var(--bg-page)] bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs">{e}</div>
+              {[Users, Car, Shield, Zap, MapPin].map((Icon, i) => (
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-[var(--bg-page)] bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+                  <Icon className="w-4 h-4 text-white" />
+                </div>
               ))}
             </div>
             <div className="text-sm text-[var(--text-muted)]">
