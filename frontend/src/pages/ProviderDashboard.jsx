@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, MapPin, Plus, CheckCircle, XCircle, BarChart3, Settings,
   MessageSquare, User, CreditCard, Bell, Moon, Sun, Search, Calendar,
-  TrendingUp, Activity, ShieldCheck, DollarSign, Award, Clock, HelpCircle, AlertTriangle
+  TrendingUp, Activity, ShieldCheck, IndianRupee, Award, Clock, HelpCircle, AlertTriangle
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -304,7 +304,7 @@ export default function ProviderDashboard() {
                       <p className="text-xs text-amber-400 font-semibold mt-1">₹{analytics?.stats?.todayEarnings || 0} Today</p>
                     </div>
                     <div className="p-3.5 rounded-2xl bg-amber-500/10 text-amber-400">
-                      <DollarSign className="w-6 h-6" />
+                      <IndianRupee className="w-6 h-6" />
                     </div>
                   </div>
                 </div>

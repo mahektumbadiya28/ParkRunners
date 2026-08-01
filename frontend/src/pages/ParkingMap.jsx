@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, DollarSign, Star, ArrowLeft, CheckCircle, X } from 'lucide-react';
+import { MapPin, IndianRupee, Star, ArrowLeft, CheckCircle, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -115,7 +115,7 @@ export default function ParkingMap() {
                 <Badge variant={spot.availableSlots > 0 ? 'success' : 'danger'}>{spot.availableSlots > 0 ? 'Open' : 'Full'}</Badge>
               </div>
               <div className="flex items-center gap-3 text-xs text-[var(--text-muted)] mb-3">
-                <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" />₹{spot.hourlyPrice}/hr</span>
+                <span className="flex items-center gap-1"><IndianRupee className="w-3 h-3" />₹{spot.hourlyPrice}/hr</span>
                 <span className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400 fill-amber-400" />{spot.rating || '4.5'}</span>
                 <span>{spot.availableSlots}/{spot.totalSlots} slots</span>
               </div>

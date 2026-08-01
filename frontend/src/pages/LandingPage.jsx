@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import {
-  MapPin, DollarSign, Key, Shield, Zap, Clock, Star,
+  MapPin, IndianRupee, Key, Shield, Zap, Clock, Star,
   CheckCircle, ArrowRight, Users, Car, TrendingUp
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -21,7 +21,7 @@ const STATS = [
   { label: 'Active Spots', value: '12,400+', icon: MapPin, color: 'text-indigo-500' },
   { label: 'Happy Drivers', value: '48,000+', icon: Users, color: 'text-purple-500' },
   { label: 'Cities Covered', value: '28', icon: TrendingUp, color: 'text-cyan-500' },
-  { label: 'Avg. Savings', value: '62%', icon: DollarSign, color: 'text-emerald-500' },
+  { label: 'Avg. Savings', value: '62%', icon: IndianRupee, color: 'text-emerald-500' },
 ];
 
 /* ── Feature cards ── */
@@ -29,7 +29,7 @@ const FEATURES = [
   { icon: MapPin, color: 'indigo', title: 'Real-Time Spot Map', desc: 'Browse thousands of verified spots on an interactive live map with instant availability updates.' },
   { icon: Shield, color: 'purple', title: 'Vetted Valet Drivers', desc: 'Every driver goes through background checks, skill testing, and digital ID verification.' },
   { icon: Zap, color: 'cyan', title: 'Instant Booking', desc: 'Book in under 30 seconds. Get confirmation, QR pass, and valet ETA all in one tap.' },
-  { icon: DollarSign, color: 'emerald', title: 'Earn with Your Space', desc: 'Turn your empty driveway or garage into a passive income stream. Set your own price.' },
+  { icon: IndianRupee, color: 'emerald', title: 'Earn with Your Space', desc: 'Turn your empty driveway or garage into a passive income stream. Set your own price.' },
   { icon: Clock, color: 'amber', title: 'Flexible Duration', desc: 'Hourly, daily, or monthly plans. Change or cancel bookings up to 30 minutes before arrival.' },
   { icon: Star, color: 'rose', title: 'Trusted Community', desc: 'Ratings, reviews, and a dispute resolution team ensure quality for every single booking.' },
 ];
@@ -60,7 +60,7 @@ const ROLES = [
     href: '/register?role=owner', cta: 'Get Started as Owner',
   },
   {
-    icon: DollarSign, gradient: 'from-purple-600 to-violet-600', glow: 'shadow-purple-500/20',
+    icon: IndianRupee, gradient: 'from-purple-600 to-violet-600', glow: 'shadow-purple-500/20',
     title: 'Space Hosts', tag: 'Earn Passive',
     desc: 'List your driveway, garage, or lot. Set hourly pricing, define availability, and withdraw earnings weekly.',
     perks: ['Easy listing flow', 'Automated scheduling', 'Weekly payouts'],
