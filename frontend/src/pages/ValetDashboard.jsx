@@ -185,7 +185,7 @@ export default function ValetDashboard() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
           {/* Header Banner */}
           <div className="relative rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
-            <div className="h-32 sm:h-48 bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500">
+            <div className="relative h-32 sm:h-48 bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500">
                {/* Pattern overlay */}
                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
             </div>
