@@ -160,6 +160,7 @@ export default function ProviderDashboard() {
     { icon: CreditCard, label: 'Earnings', activeId: 'earnings' },
     { icon: BarChart3, label: 'Analytics', activeId: 'analytics' },
     { icon: MessageSquare, label: 'Reviews', activeId: 'reviews' },
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
 
   const TOP_NAV_ITEMS = [

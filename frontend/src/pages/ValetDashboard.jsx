@@ -61,6 +61,7 @@ export default function ValetDashboard() {
 
   const SIDEBAR_ITEMS = [
     { icon: Briefcase, label: 'Available Jobs', activeId: 'jobs' },
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
 
   const TOP_NAV_ITEMS = [

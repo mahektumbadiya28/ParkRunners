@@ -126,3 +126,28 @@ export const resetPassword = async (req, res) => {
 export const verifyOtp = async (req, res) => {
   res.status(501).json({ success: false, message: 'Not implemented' });
 };
+
+// @desc    Switch user role
+// @route   PUT /api/auth/role
+export const switchRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!role) {
+      return res.status(400).json({ success: false, message: 'Role is required' });
+    }
+    const dbRole = mapRole(role);
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    user.role = dbRole;
+    await user.save();
+    return res.json({
+      success: true,
+      message: `Role updated to ${role}`,
+      user: normalizeUserForClient(user)
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};

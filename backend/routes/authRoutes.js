@@ -7,7 +7,8 @@ import {
   logout,
   forgotPassword,
   resetPassword,
-  verifyOtp
+  verifyOtp,
+  switchRole
 } from '../controllers/authController.js';
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 router.post('/verify-otp', verifyOtp);
 router.get('/profile', protect, getProfile);
+router.put('/role', protect, switchRole);
 
 export default router;

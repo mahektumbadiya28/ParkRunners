@@ -92,12 +92,30 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Switch Role function
+  const switchRole = async (newRole) => {
+    const updated = formatUser({
+      ...user,
+      role: newRole
+    });
+    setUser(updated);
+    localStorage.setItem('user', JSON.stringify(updated));
+
+    try {
+      await API.put('/auth/role', { role: newRole });
+    } catch (err) {
+      console.error('Backend role update failed:', err);
+    }
+    return updated;
+  };
+
   const value = {
     user,
     loading,
     login,
     register,
     logout,
+    switchRole,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
     isOwner: user?.role === 'owner',

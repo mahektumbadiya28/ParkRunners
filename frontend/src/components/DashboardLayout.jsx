@@ -3,8 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin, LayoutDashboard, Car, Settings, LogOut,
-  Bell, Menu, X, Sun, Moon, ChevronRight
+  Bell, Menu, X, Sun, Moon, ChevronRight, Building2, Key,
+  Shield, Check, ChevronDown
 } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -39,13 +41,55 @@ function NavItem({ icon: Icon, label, to, active, onClick }) {
 }
 
 export default function DashboardLayout({ children, navItems = [], topNavItems = [], title = '' }) {
-  const { user, logout } = useAuth();
+  const { user, logout, switchRole } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showRoleMenu, setShowRoleMenu] = useState(false);
 
   const handleLogout = () => { logout(); navigate('/'); };
+
+  const ROLES = [
+    {
+      id: 'owner',
+      label: 'Car Owner',
+      icon: Car,
+      color: 'from-blue-500 to-indigo-600',
+      route: '/owner',
+      desc: 'Book parking, manage garage & active reservations'
+    },
+    {
+      id: 'provider',
+      label: 'Parking Provider',
+      icon: Building2,
+      color: 'from-emerald-500 to-teal-600',
+      route: '/provider',
+      desc: 'List parking spots, set rates & earn'
+    },
+    {
+      id: 'valet',
+      label: 'Valet Driver',
+      icon: Key,
+      color: 'from-purple-500 to-violet-600',
+      route: '/valet',
+      desc: 'Accept valet jobs, park vehicles & earn'
+    }
+  ];
+
+  const handleSwitchRole = async (targetRole, targetRoute) => {
+    setShowRoleMenu(false);
+    const currentNorm = user?.role === 'car_owner' ? 'owner' : user?.role === 'space_provider' ? 'provider' : user?.role === 'valet_driver' ? 'valet' : user?.role;
+    if (currentNorm === targetRole) {
+      toast.success(`Already on ${targetRole.toUpperCase()} Dashboard`);
+      navigate(targetRoute);
+      return;
+    }
+    const roleObj = ROLES.find(r => r.id === targetRole);
+    toast.success(`Role switched to ${roleObj?.label || targetRole}!`);
+    await switchRole(targetRole);
+    navigate(targetRoute);
+  };
 
   const roleColors = {
     owner: 'from-indigo-600 to-blue-600',
@@ -165,14 +209,91 @@ export default function DashboardLayout({ children, navItems = [], topNavItems =
               <Bell className="w-5 h-5" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[var(--bg-card)]" />
             </button>
-            <div className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full bg-[var(--bg-card-hover)] border border-[var(--border-color)] cursor-pointer hover:border-indigo-500/30 transition-all">
-              <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
-                {(user?.name || user?.fullName || 'User').charAt(0).toUpperCase()}
-              </div>
-              <div className="hidden sm:flex flex-col">
-                <span className="text-sm font-bold text-[var(--text-primary)] leading-none mb-1">{user?.name || user?.fullName || 'User'}</span>
-                <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider leading-none">{user?.role ? user.role.replace('_', ' ') : 'User'}</span>
-              </div>
+            {/* Interactive User Profile & Role Switcher Badge */}
+            <div className="relative">
+              <button
+                onClick={() => setShowRoleMenu(!showRoleMenu)}
+                className="flex items-center gap-3 pl-2 pr-3.5 py-1.5 rounded-full bg-[var(--bg-card-hover)] border border-[var(--border-color)] cursor-pointer hover:border-indigo-500/40 transition-all shadow-sm group"
+              >
+                <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md`}>
+                  {(user?.name || user?.fullName || 'User').charAt(0).toUpperCase()}
+                </div>
+                <div className="hidden sm:flex flex-col text-left">
+                  <span className="text-sm font-bold text-[var(--text-primary)] leading-none mb-1 group-hover:text-indigo-500 transition-colors">
+                    {user?.name || user?.fullName || 'User'}
+                  </span>
+                  <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider leading-none flex items-center gap-1">
+                    {user?.role ? user.role.replace('_', ' ') : 'User'}
+                    <ChevronDown className={`w-3 h-3 text-[var(--text-muted)] transition-transform duration-200 ${showRoleMenu ? 'rotate-180 text-indigo-500' : ''}`} />
+                  </span>
+                </div>
+              </button>
+
+              <AnimatePresence>
+                {showRoleMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-3 w-80 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-2xl z-50 overflow-hidden p-2 space-y-1 backdrop-blur-xl"
+                  >
+                    <div className="px-4 py-3 border-b border-[var(--border-color)] mb-1">
+                      <p className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">Switch Account Role</p>
+                      <p className="text-xs text-[var(--text-secondary)] mt-0.5">Switch your workspace view instantly</p>
+                    </div>
+
+                    {ROLES.map((r) => {
+                      const activeRole = user?.role === 'car_owner' ? 'owner' : user?.role === 'space_provider' ? 'provider' : user?.role === 'valet_driver' ? 'valet' : user?.role;
+                      const isActive = activeRole === r.id;
+                      const RoleIcon = r.icon;
+                      return (
+                        <button
+                          key={r.id}
+                          onClick={() => handleSwitchRole(r.id, r.route)}
+                          className={`w-full text-left p-3 rounded-2xl flex items-start gap-3 transition-all ${
+                            isActive
+                              ? 'bg-indigo-500/10 border border-indigo-500/30'
+                              : 'hover:bg-[var(--bg-card-hover)]'
+                          }`}
+                        >
+                          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${r.color} flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-sm`}>
+                            <RoleIcon className="w-4.5 h-4.5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <span className={`text-xs font-bold ${isActive ? 'text-indigo-500 font-extrabold' : 'text-[var(--text-primary)]'}`}>
+                                {r.label}
+                              </span>
+                              {isActive && (
+                                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-500 uppercase tracking-wider flex items-center gap-1">
+                                  <Check className="w-3 h-3" /> Active
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-[var(--text-muted)] line-clamp-1 mt-0.5">{r.desc}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+
+                    <div className="pt-2 border-t border-[var(--border-color)] flex gap-2">
+                      <button
+                        onClick={() => { setShowRoleMenu(false); navigate('/settings'); }}
+                        className="flex-1 text-xs font-bold py-2.5 rounded-xl text-center text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] flex items-center justify-center gap-1.5 transition-all"
+                      >
+                        <Settings className="w-3.5 h-3.5" /> Settings
+                      </button>
+                      <button
+                        onClick={() => { setShowRoleMenu(false); handleLogout(); }}
+                        className="flex-1 text-xs font-bold py-2.5 rounded-xl text-center text-red-500 hover:bg-red-500/10 flex items-center justify-center gap-1.5 transition-all"
+                      >
+                        <LogOut className="w-3.5 h-3.5" /> Sign Out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </header>

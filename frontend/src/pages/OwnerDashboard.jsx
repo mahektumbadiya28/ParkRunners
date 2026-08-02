@@ -53,6 +53,7 @@ export default function OwnerDashboard() {
   const SIDEBAR_ITEMS = [
     { icon: MapPin, label: 'Find Parking', to: '/map' },
     { icon: Car, label: 'My Vehicles', activeId: 'vehicles' },
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
 
   const TOP_NAV_ITEMS = [
