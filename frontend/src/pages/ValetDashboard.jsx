@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Car, Clock, CheckCircle, LayoutDashboard, Settings, Briefcase, User } from 'lucide-react';
+import { Car, Clock, CheckCircle, LayoutDashboard, Settings, Briefcase, User, MapPin } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { listAvailableJobs, bookingAction } from '../services/parking';
+import { useAuth } from '../context/AuthContext';
 import { io } from 'socket.io-client';
 
 export default function ValetDashboard() {
+  const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(true);
@@ -180,35 +182,92 @@ export default function ValetDashboard() {
         </div>
       )}
       {activeTab === 'profile' && (
-        <div className="max-w-2xl mx-auto card-premium p-6 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center font-black text-white text-xl">
-              V
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          {/* Header Banner */}
+          <div className="relative rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <div className="h-32 sm:h-48 bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500">
+               {/* Pattern overlay */}
+               <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
             </div>
-            <div>
-              <h3 className="text-xl font-extrabold text-[var(--text-primary)]">Valet Profile</h3>
-              <p className="text-xs text-[var(--text-muted)]">Verified Driver Identity</p>
-            </div>
-          </div>
-
-          <div className="space-y-4 pt-4 border-t border-[var(--border-color)]">
-            <div className="grid grid-cols-2 gap-4">
-              <Input label="Full Name" placeholder="Alex Valet" value="Alex Valet" readOnly />
-              <Input label="Driving License" placeholder="DL-14-XXXXXXX" value="DL-14-XXXXXXX" readOnly />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <Input label="Aadhaar Number" placeholder="XXXX-XXXX-1234" value="XXXX-XXXX-1234" readOnly />
-              <Input label="Experience" placeholder="3 Years" value="3 Years" readOnly />
-            </div>
-            <div className="mt-4 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex items-center gap-3">
-              <CheckCircle className="w-5 h-5 text-emerald-500" />
-              <div>
-                <h4 className="text-sm font-bold text-[var(--text-primary)]">KYC Verified</h4>
-                <p className="text-xs text-[var(--text-muted)]">Background check completed.</p>
+            <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
+                 <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-black text-white text-4xl">
+                   {user?.name?.charAt(0) || 'V'}
+                 </div>
+                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                   <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
+                 </div>
+              </div>
+              <div className="flex-1 pb-2">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || 'Valet Driver'}</h3>
+                <div className="flex flex-wrap items-center gap-3 mt-2">
+                  <Badge variant="success" className="flex items-center gap-1"><CheckCircle className="w-3 h-3" /> KYC Verified</Badge>
+                  <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4"/> Assigned: Park Runners Hub</span>
+                </div>
+              </div>
+              <div className="pb-2 flex gap-3 w-full sm:w-auto">
+                 <Button variant="outline" className="flex-1 sm:flex-none">View Rating</Button>
               </div>
             </div>
           </div>
-        </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column */}
+            <div className="space-y-6">
+              <div className="card-premium p-6">
+                <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-blue-500"/> Driver Details</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Email Address</label>
+                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.email || 'valet@volenpark.com'}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Phone Number</label>
+                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.phone || '+91 88888 77777'}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Experience</label>
+                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">3 Years</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-premium p-6 bg-gradient-to-br from-blue-500/10 to-transparent border-blue-500/20">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-[var(--text-primary)]">Active Status</h4>
+                    <p className="text-xs text-[var(--text-muted)]">Currently online and accepting jobs.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="card-premium p-6">
+                <h4 className="font-bold text-[var(--text-primary)] mb-6">Identity & Documents</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Input label="Full Name" placeholder="Alex Valet" value={user?.name || 'Alex Valet'} readOnly />
+                  <Input label="Driving License" placeholder="DL-14-XXXXXXX" value="DL-14-XXXXXXX" readOnly />
+                  <Input label="Aadhaar Number" placeholder="XXXX-XXXX-1234" value="XXXX-XXXX-1234" readOnly />
+                  <Input label="Employee ID" placeholder="VP-VAL-001" value="VP-VAL-001" readOnly />
+                </div>
+                <div className="mt-6 pt-6 border-t border-[var(--border-color)] flex justify-end">
+                  <Button variant="primary" className="bg-blue-600 hover:bg-blue-500 shadow-blue-500/30">Update Documents</Button>
+                </div>
+              </div>
+
+              <div className="card-premium p-6 border-red-500/20 bg-red-500/5">
+                <h4 className="font-bold text-red-500 mb-2">Resignation Request</h4>
+                <p className="text-xs text-[var(--text-muted)] mb-4">Request termination of your valet contract. Requires 14 days notice period.</p>
+                <Button variant="outline" className="text-red-500 border-red-500/30 hover:bg-red-500 hover:text-white">Submit Request</Button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       )}
       {activeTab === 'settings' && (
         <div className="card-premium p-6">

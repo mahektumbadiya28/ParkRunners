@@ -8,6 +8,7 @@ import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { listMyBookings, bookingAction } from '../services/parking';
+import { useAuth } from '../context/AuthContext';
 
 const statusVariant = {
   pending: 'warning', confirmed: 'info', completed: 'success', cancelled: 'danger',
@@ -21,6 +22,7 @@ const fadeUp = (delay = 0) => ({
 
 export default function OwnerDashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -165,28 +167,92 @@ export default function OwnerDashboard() {
         </div>
       )}
       {activeTab === 'profile' && (
-        <div className="max-w-2xl mx-auto card-premium p-6 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 flex items-center justify-center font-black text-white text-xl">
-              C
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          {/* Header Banner */}
+          <div className="relative rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <div className="h-32 sm:h-48 bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500">
+               {/* Pattern overlay */}
+               <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
             </div>
-            <div>
-              <h3 className="text-xl font-extrabold text-[var(--text-primary)]">Car Owner Profile</h3>
-              <p className="text-xs text-[var(--text-muted)]">Manage your personal details</p>
+            <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
+                 <div className="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-black text-white text-4xl">
+                   {user?.name?.charAt(0) || 'C'}
+                 </div>
+                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                   <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
+                 </div>
+              </div>
+              <div className="flex-1 pb-2">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || 'Car Owner'}</h3>
+                <div className="flex flex-wrap items-center gap-3 mt-2">
+                  <Badge variant="success" className="flex items-center gap-1"><CheckCircle className="w-3 h-3" /> Verified Member</Badge>
+                  <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4"/> Default: Mumbai</span>
+                </div>
+              </div>
+              <div className="pb-2 flex gap-3 w-full sm:w-auto">
+                 <Button variant="outline" className="flex-1 sm:flex-none">Share Profile</Button>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-4 pt-4 border-t border-[var(--border-color)]">
-            <div className="grid grid-cols-2 gap-4">
-              <Input label="Full Name" placeholder="John Doe" value="John Doe" readOnly />
-              <Input label="Email Address" placeholder="john@example.com" value="john@example.com" readOnly />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column */}
+            <div className="space-y-6">
+              <div className="card-premium p-6">
+                <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-emerald-500"/> Personal Info</h4>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Email Address</label>
+                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.email || 'owner@volenpark.com'}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Phone Number</label>
+                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.phone || '+91 98765 43210'}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Member Since</label>
+                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">August 2026</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-premium p-6 bg-gradient-to-br from-emerald-500/10 to-transparent border-emerald-500/20">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
+                    <CheckCircle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-[var(--text-primary)]">Trusted Parker</h4>
+                    <p className="text-xs text-[var(--text-muted)]">Completed {stats.completed} bookings seamlessly.</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <Input label="Phone Number" placeholder="+91 98765 43210" value="+91 98765 43210" readOnly />
-              <Input label="Default City" placeholder="Mumbai" value="Mumbai" readOnly />
+
+            {/* Right Column */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="card-premium p-6">
+                <h4 className="font-bold text-[var(--text-primary)] mb-6">Account Settings</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Input label="Full Name" placeholder="John Doe" value={user?.name || 'John Doe'} readOnly />
+                  <Input label="Email" placeholder="owner@volenpark.com" value={user?.email || 'owner@volenpark.com'} readOnly />
+                  <Input label="Phone Number" placeholder="+91 98765 43210" value={user?.phone || '+91 98765 43210'} readOnly />
+                  <Input label="Default City" placeholder="Mumbai" value="Mumbai" readOnly />
+                </div>
+                <div className="mt-6 pt-6 border-t border-[var(--border-color)] flex justify-end">
+                  <Button variant="primary" className="bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/30">Save Changes</Button>
+                </div>
+              </div>
+
+              <div className="card-premium p-6 border-red-500/20 bg-red-500/5">
+                <h4 className="font-bold text-red-500 mb-2">Danger Zone</h4>
+                <p className="text-xs text-[var(--text-muted)] mb-4">Permanently delete your account and all booking history. This action cannot be undone.</p>
+                <Button variant="outline" className="text-red-500 border-red-500/30 hover:bg-red-500 hover:text-white">Delete Account</Button>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
       {activeTab === 'settings' && (
         <div className="card-premium p-6">
