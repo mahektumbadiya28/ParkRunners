@@ -25,6 +25,7 @@ import reviewRoutes from './routes/reviewRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import settingsRoutes from './routes/settingsRoutes.js';
 // Load environment variables
 dotenv.config();
 
@@ -87,6 +88,15 @@ app.use('/api/review', reviewRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/profile', settingsRoutes);
+app.use('/api/password', settingsRoutes);
+app.use('/api/login-history', settingsRoutes);
+app.use('/api/devices', settingsRoutes);
+app.use('/api/device', settingsRoutes);
+app.use('/api/export-data', settingsRoutes);
+app.use('/api/account', settingsRoutes);
+app.use('/api/system', settingsRoutes);
 
 import { setupSocketHandlers } from './services/socketService.js';
 setupSocketHandlers();

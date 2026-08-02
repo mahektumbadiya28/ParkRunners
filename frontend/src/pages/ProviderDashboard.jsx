@@ -18,6 +18,7 @@ import API from '../services/api';
 import { listMySpots, createSpot } from '../services/parking';
 import { useSocket } from '../hooks/useSocket';
 import { useAuth } from '../context/AuthContext';
+import SettingsPage from './SettingsPage';
 
 export default function ProviderDashboard() {
   const { user } = useAuth();
@@ -164,7 +165,7 @@ export default function ProviderDashboard() {
   const TOP_NAV_ITEMS = [
     { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
     { icon: User, label: 'Profile', activeId: 'profile' },
-    { icon: Settings, label: 'Settings', activeId: 'settings' }
+    { icon: Settings, label: 'Settings', to: '/settings' }
   ];
 
   // Helper counters
@@ -497,7 +498,7 @@ export default function ProviderDashboard() {
                   {[1, 2, 3, 4, 5].map(step => (
                     <div key={step} className="flex items-center gap-2">
                       <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${addStep === step ? 'bg-indigo-600 text-white' :
-                          addStep > step ? 'bg-indigo-500/10 text-indigo-400' : 'bg-gray-800 text-gray-500'
+                        addStep > step ? 'bg-indigo-500/10 text-indigo-400' : 'bg-gray-800 text-gray-500'
                         }`}>
                         {step}
                       </span>
@@ -834,117 +835,97 @@ export default function ProviderDashboard() {
               </div>
             )}
 
-      {activeTab === 'profile' && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          {/* Header Banner */}
-          <div className="relative rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
-            <div className="relative h-32 sm:h-48 bg-gradient-to-r from-purple-600 via-violet-500 to-indigo-600">
-               {/* Pattern overlay */}
-               <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
-            </div>
-            <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
-                 <div className="w-full h-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center font-black text-white text-4xl">
-                   {(user?.name || user?.fullName || 'Space Provider').charAt(0).toUpperCase()}
-                 </div>
-                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                   <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
-                 </div>
-              </div>
-              <div className="flex-1 pb-2">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || user?.fullName || 'Space Provider'}</h3>
-                <div className="flex flex-wrap items-center gap-3 mt-2">
-                  <Badge variant="purple" className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Verified Host</Badge>
-                  <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4"/> Business HQ: Mumbai</span>
+            {activeTab === 'profile' && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                {/* Header Banner */}
+                <div className="relative rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+                  <div className="relative h-32 sm:h-48 bg-gradient-to-r from-purple-600 via-violet-500 to-indigo-600">
+                    {/* Pattern overlay */}
+                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+                  </div>
+                  <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
+                      <div className="w-full h-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center font-black text-white text-4xl">
+                        {(user?.name || user?.fullName || 'Space Provider').charAt(0).toUpperCase()}
+                      </div>
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
+                      </div>
+                    </div>
+                    <div className="flex-1 pb-2">
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || user?.fullName || 'Space Provider'}</h3>
+                      <div className="flex flex-wrap items-center gap-3 mt-2">
+                        <Badge variant="purple" className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Verified Host</Badge>
+                        <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4" /> Business HQ: Mumbai</span>
+                      </div>
+                    </div>
+                    <div className="pb-2 flex gap-3 w-full sm:w-auto">
+                      <Button variant="outline" className="flex-1 sm:flex-none">Share Listing</Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="pb-2 flex gap-3 w-full sm:w-auto">
-                 <Button variant="outline" className="flex-1 sm:flex-none">Share Listing</Button>
-              </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column */}
-            <div className="space-y-6">
-              <div className="card-premium p-6">
-                <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-purple-500"/> Host Details</h4>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Email Address</label>
-                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.email || 'provider@volenpark.com'}</p>
-                  </div>
-                  <div>
-                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Phone Number</label>
-                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.phone || '+91 99999 99999'}</p>
-                  </div>
-                  <div>
-                    <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Host Tier</label>
-                    <p className="text-sm font-medium text-[var(--text-primary)] mt-1">Premium Partner</p>
-                  </div>
-                </div>
-              </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Left Column */}
+                  <div className="space-y-6">
+                    <div className="card-premium p-6">
+                      <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-purple-500" /> Host Details</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Email Address</label>
+                          <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.email || 'provider@volenpark.com'}</p>
+                        </div>
+                        <div>
+                          <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Phone Number</label>
+                          <p className="text-sm font-medium text-[var(--text-primary)] mt-1">{user?.phone || '+91 99999 99999'}</p>
+                        </div>
+                        <div>
+                          <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Host Tier</label>
+                          <p className="text-sm font-medium text-[var(--text-primary)] mt-1">Premium Partner</p>
+                        </div>
+                      </div>
+                    </div>
 
-              <div className="card-premium p-6 bg-gradient-to-br from-purple-500/10 to-transparent border-purple-500/20">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
-                    <Award className="w-5 h-5" />
+                    <div className="card-premium p-6 bg-gradient-to-br from-purple-500/10 to-transparent border-purple-500/20">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
+                          <Award className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-sm text-[var(--text-primary)]">Top Rated Host</h4>
+                          <p className="text-xs text-[var(--text-muted)]">Maintains a 4.9+ star rating.</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-[var(--text-primary)]">Top Rated Host</h4>
-                    <p className="text-xs text-[var(--text-muted)]">Maintains a 4.9+ star rating.</p>
+
+                  {/* Right Column */}
+                  <div className="lg:col-span-2 space-y-6">
+                    <div className="card-premium p-6">
+                      <h4 className="font-bold text-[var(--text-primary)] mb-6">KYC Registration & GST Invoicing</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input label="Business Name" placeholder="VolenPark Host Co." value={user?.name || user?.fullName || "VolenPark Host Co."} readOnly />
+                        <Input label="GST Identification" placeholder="GST27AAAAA1111A1Z1" value="27AAAAA1111A1Z1" readOnly />
+                        <Input label="UPI ID (Payouts)" placeholder="host@upi" value="host@upi" readOnly />
+                        <Input label="Associated Phone" placeholder="+91 99999 99999" value="+91 99999 99999" readOnly />
+                      </div>
+                      <div className="mt-6 pt-6 border-t border-[var(--border-color)] flex justify-end">
+                        <Button variant="primary" className="bg-purple-600 hover:bg-purple-500 shadow-purple-500/30">Update Business Info</Button>
+                      </div>
+                    </div>
+
+                    <div className="card-premium p-6 border-red-500/20 bg-red-500/5">
+                      <h4 className="font-bold text-red-500 mb-2">Deactivate Partner Account</h4>
+                      <p className="text-xs text-[var(--text-muted)] mb-4">Temporarily unlist all your parking spots and pause payouts.</p>
+                      <Button variant="outline" className="text-red-500 border-red-500/30 hover:bg-red-500 hover:text-white">Deactivate Account</Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="lg:col-span-2 space-y-6">
-              <div className="card-premium p-6">
-                <h4 className="font-bold text-[var(--text-primary)] mb-6">KYC Registration & GST Invoicing</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Business Name" placeholder="VolenPark Host Co." value={user?.name || user?.fullName || "VolenPark Host Co."} readOnly />
-                  <Input label="GST Identification" placeholder="GST27AAAAA1111A1Z1" value="27AAAAA1111A1Z1" readOnly />
-                  <Input label="UPI ID (Payouts)" placeholder="host@upi" value="host@upi" readOnly />
-                  <Input label="Associated Phone" placeholder="+91 99999 99999" value="+91 99999 99999" readOnly />
-                </div>
-                <div className="mt-6 pt-6 border-t border-[var(--border-color)] flex justify-end">
-                  <Button variant="primary" className="bg-purple-600 hover:bg-purple-500 shadow-purple-500/30">Update Business Info</Button>
-                </div>
-              </div>
-
-              <div className="card-premium p-6 border-red-500/20 bg-red-500/5">
-                <h4 className="font-bold text-red-500 mb-2">Deactivate Partner Account</h4>
-                <p className="text-xs text-[var(--text-muted)] mb-4">Temporarily unlist all your parking spots and pause payouts.</p>
-                <Button variant="outline" className="text-red-500 border-red-500/30 hover:bg-red-500 hover:text-white">Deactivate Account</Button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
+              </motion.div>
+            )}
 
             {/* TAB: SETTINGS */}
-            {activeTab === 'settings' && (
-              <div className="max-w-2xl mx-auto card-premium p-6 space-y-6">
-                <h3 className="font-extrabold text-[var(--text-primary)] text-lg">System Preferences</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card-hover)]">
-                    <div>
-                      <h4 className="text-sm font-bold text-[var(--text-primary)]">Email Notifications</h4>
-                      <p className="text-xs text-[var(--text-muted)] mt-0.5">Receive dynamic pricing updates and slot alerts by email.</p>
-                    </div>
-                    <input type="checkbox" defaultChecked className="h-4 w-4 text-indigo-600" />
-                  </div>
-                  <div className="flex items-center justify-between p-4 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card-hover)]">
-                    <div>
-                      <h4 className="text-sm font-bold text-[var(--text-primary)]">Auto Payout Mode</h4>
-                      <p className="text-xs text-[var(--text-muted)] mt-0.5">Settle earnings to bank account instantly after reservation completions.</p>
-                    </div>
-                    <input type="checkbox" defaultChecked className="h-4 w-4 text-indigo-600" />
-                  </div>
-                </div>
-              </div>
-            )}
+            {activeTab === 'settings' && <SettingsPage embedded={true} />}
           </>
         )}
 

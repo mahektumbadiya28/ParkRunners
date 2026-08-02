@@ -12,6 +12,7 @@ import Badge from '../components/ui/Badge';
 import AdminUsers from './AdminUsers';
 import AdminBookings from './AdminBookings';
 import AdminSettings from './AdminSettings';
+import SettingsPage from './SettingsPage';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -43,7 +44,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <DashboardLayout 
+    <DashboardLayout
       title=""
       navItems={SIDEBAR_ITEMS.map(item => ({
         icon: item.icon,
@@ -116,7 +117,7 @@ export default function AdminDashboard() {
 
       {activeTab === 'bookings' && <AdminBookings />}
 
-      {activeTab === 'settings' && <AdminSettings />}
+      {activeTab === 'settings' && <SettingsPage embedded={true} />}
 
       {activeTab === 'approvals' && (
         <div className="card-premium py-16 text-center">
@@ -130,27 +131,27 @@ export default function AdminDashboard() {
           {/* Header Banner */}
           <div className="relative rounded-3xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
             <div className="relative h-32 sm:h-48 bg-gradient-to-r from-cyan-600 via-blue-500 to-indigo-600">
-               {/* Pattern overlay */}
-               <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+              {/* Pattern overlay */}
+              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
             </div>
             <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
-                 <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-4xl">
-                   {(user?.name || user?.fullName || 'System Admin').charAt(0).toUpperCase()}
-                 </div>
-                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                   <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
-                 </div>
+                <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-4xl">
+                  {(user?.name || user?.fullName || 'System Admin').charAt(0).toUpperCase()}
+                </div>
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
+                </div>
               </div>
               <div className="flex-1 pb-2">
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || user?.fullName || 'System Admin'}</h3>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   <Badge variant="info" className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Root Access</Badge>
-                  <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4"/> Global Server</span>
+                  <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4" /> Global Server</span>
                 </div>
               </div>
               <div className="pb-2 flex gap-3 w-full sm:w-auto">
-                 <Button variant="outline" className="flex-1 sm:flex-none">Audit Logs</Button>
+                <Button variant="outline" className="flex-1 sm:flex-none">Audit Logs</Button>
               </div>
             </div>
           </div>
@@ -159,7 +160,7 @@ export default function AdminDashboard() {
             {/* Left Column */}
             <div className="space-y-6">
               <div className="card-premium p-6">
-                <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-cyan-500"/> Admin Details</h4>
+                <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-cyan-500" /> Admin Details</h4>
                 <div className="space-y-4">
                   <div>
                     <label className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">Email Address</label>

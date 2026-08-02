@@ -15,6 +15,7 @@ import BookingFlow from './pages/BookingFlow';
 import LiveTracking from './pages/LiveTracking';
 import JobView from './pages/JobView';
 import ValetKYC from './pages/ValetKYC';
+import SettingsPage from './pages/SettingsPage';
 import { ThemeProvider } from './context/ThemeContext';
 import ThemeToggle from './components/ThemeToggle';
 
@@ -75,6 +76,9 @@ export default function App() {
             {/* Auth Routes (Redirects if already logged in) */}
             <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
             <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
+
+            {/* Settings Route for All Authenticated Users */}
+            <Route path="/settings" element={<ProtectedRoute allowedRoles={['owner', 'provider', 'valet', 'admin']}><SettingsPage /></ProtectedRoute>} />
 
             {/* Role Protected Dashboards */}
             <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboard /></ProtectedRoute>} />
