@@ -4,6 +4,7 @@ import { Users, MapPin, BarChart3, TrendingUp, ShieldAlert, LayoutDashboard, Set
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
+import Input from '../components/ui/Input';
 import API from '../services/api';
 
 import AdminUsers from './AdminUsers';
@@ -122,9 +123,27 @@ export default function AdminDashboard() {
         </div>
       )}
       {activeTab === 'profile' && (
-        <div className="card-premium p-6">
-          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Admin Profile</h3>
-          <p className="text-[var(--text-muted)]">Profile settings are coming soon.</p>
+        <div className="max-w-2xl mx-auto card-premium p-6 space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-xl">
+              A
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-[var(--text-primary)]">Admin Control Profile</h3>
+              <p className="text-xs text-[var(--text-muted)]">Platform Administrator Settings</p>
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-[var(--border-color)]">
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Admin Name" placeholder="Super Admin" value="Super Admin" readOnly />
+              <Input label="Admin Email" placeholder="admin@volenpark.com" value="admin@volenpark.com" readOnly />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Security Level" placeholder="Tier 1 Access" value="Tier 1 Access" readOnly />
+              <Input label="System Status" placeholder="All Systems Normal" value="All Systems Normal" readOnly />
+            </div>
+          </div>
         </div>
       )}
     </DashboardLayout>

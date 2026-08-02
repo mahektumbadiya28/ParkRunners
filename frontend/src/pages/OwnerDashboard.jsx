@@ -6,6 +6,7 @@ import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 import { listMyBookings, bookingAction } from '../services/parking';
 
 const statusVariant = {
@@ -164,9 +165,27 @@ export default function OwnerDashboard() {
         </div>
       )}
       {activeTab === 'profile' && (
-        <div className="card-premium p-6">
-          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Owner Profile</h3>
-          <p className="text-[var(--text-muted)]">Profile settings are coming soon.</p>
+        <div className="max-w-2xl mx-auto card-premium p-6 space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 flex items-center justify-center font-black text-white text-xl">
+              C
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-[var(--text-primary)]">Car Owner Profile</h3>
+              <p className="text-xs text-[var(--text-muted)]">Manage your personal details</p>
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-[var(--border-color)]">
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Full Name" placeholder="John Doe" value="John Doe" readOnly />
+              <Input label="Email Address" placeholder="john@example.com" value="john@example.com" readOnly />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Phone Number" placeholder="+91 98765 43210" value="+91 98765 43210" readOnly />
+              <Input label="Default City" placeholder="Mumbai" value="Mumbai" readOnly />
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'settings' && (

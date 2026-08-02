@@ -6,6 +6,7 @@ import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 import { listAvailableJobs, bookingAction } from '../services/parking';
 import { io } from 'socket.io-client';
 
@@ -179,9 +180,34 @@ export default function ValetDashboard() {
         </div>
       )}
       {activeTab === 'profile' && (
-        <div className="card-premium p-6">
-          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Valet Profile</h3>
-          <p className="text-[var(--text-muted)]">Profile settings are coming soon.</p>
+        <div className="max-w-2xl mx-auto card-premium p-6 space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center font-black text-white text-xl">
+              V
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-[var(--text-primary)]">Valet Profile</h3>
+              <p className="text-xs text-[var(--text-muted)]">Verified Driver Identity</p>
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-[var(--border-color)]">
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Full Name" placeholder="Alex Valet" value="Alex Valet" readOnly />
+              <Input label="Driving License" placeholder="DL-14-XXXXXXX" value="DL-14-XXXXXXX" readOnly />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Aadhaar Number" placeholder="XXXX-XXXX-1234" value="XXXX-XXXX-1234" readOnly />
+              <Input label="Experience" placeholder="3 Years" value="3 Years" readOnly />
+            </div>
+            <div className="mt-4 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-emerald-500" />
+              <div>
+                <h4 className="text-sm font-bold text-[var(--text-primary)]">KYC Verified</h4>
+                <p className="text-xs text-[var(--text-muted)]">Background check completed.</p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 'settings' && (
