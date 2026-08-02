@@ -32,6 +32,7 @@ const normalizeClientRole = (role) => {
 const normalizeUserForClient = (user) => {
   const normalized = user.toObject ? user.toObject() : { ...user };
   normalized.role = normalizeClientRole(normalized.role);
+  normalized.name = normalized.fullName || normalized.name;
   delete normalized.password;
   return normalized;
 };

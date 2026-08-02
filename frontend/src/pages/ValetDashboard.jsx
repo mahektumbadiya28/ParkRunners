@@ -192,14 +192,14 @@ export default function ValetDashboard() {
             <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
                  <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-black text-white text-4xl">
-                   {user?.name?.charAt(0) || 'V'}
+                   {(user?.name || user?.fullName || 'Valet Driver').charAt(0).toUpperCase()}
                  </div>
                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                    <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
                  </div>
               </div>
               <div className="flex-1 pb-2">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || 'Valet Driver'}</h3>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || user?.fullName || 'Valet Driver'}</h3>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   <Badge variant="success" className="flex items-center gap-1"><CheckCircle className="w-3 h-3" /> KYC Verified</Badge>
                   <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4"/> Assigned: Park Runners Hub</span>
@@ -250,7 +250,7 @@ export default function ValetDashboard() {
               <div className="card-premium p-6">
                 <h4 className="font-bold text-[var(--text-primary)] mb-6">Identity & Documents</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Full Name" placeholder="Alex Valet" value={user?.name || 'Alex Valet'} readOnly />
+                  <Input label="Full Name" placeholder="Alex Valet" value={user?.name || user?.fullName || 'Alex Valet'} readOnly />
                   <Input label="Driving License" placeholder="DL-14-XXXXXXX" value="DL-14-XXXXXXX" readOnly />
                   <Input label="Aadhaar Number" placeholder="XXXX-XXXX-1234" value="XXXX-XXXX-1234" readOnly />
                   <Input label="Employee ID" placeholder="VP-VAL-001" value="VP-VAL-001" readOnly />

@@ -7,6 +7,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const formatUser = (userData) => {
+    if (!userData) return null;
+    return {
+      ...userData,
+      name: userData.name || userData.fullName || 'User',
+    };
+  };
+
   // Check if user is logged in on mount
   useEffect(() => {
     const checkLoggedIn = async () => {
@@ -15,12 +23,14 @@ export const AuthProvider = ({ children }) => {
 
       if (token && savedUser) {
         try {
-          setUser(JSON.parse(savedUser));
+          const parsed = JSON.parse(savedUser);
+          setUser(formatUser(parsed));
           // Validate token with backend in the background
           const response = await API.get('/auth/profile');
           if (response.data.success) {
-            setUser(response.data.user);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+            const formatted = formatUser(response.data.user);
+            setUser(formatted);
+            localStorage.setItem('user', JSON.stringify(formatted));
           }
         } catch (error) {
           console.error('Session validation failed:', error);
@@ -39,9 +49,10 @@ export const AuthProvider = ({ children }) => {
       const response = await API.post('/auth/register', userData);
       if (response.data.success) {
         const { token, user: userDetails } = response.data;
+        const formatted = formatUser(userDetails);
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userDetails));
-        setUser(userDetails);
+        localStorage.setItem('user', JSON.stringify(formatted));
+        setUser(formatted);
         return { success: true };
       }
       return { success: false, message: response.data.message || 'Registration failed' };
@@ -59,9 +70,10 @@ export const AuthProvider = ({ children }) => {
       const response = await API.post('/auth/login', { email, password });
       if (response.data.success) {
         const { token, user: userDetails } = response.data;
+        const formatted = formatUser(userDetails);
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userDetails));
-        setUser(userDetails);
+        localStorage.setItem('user', JSON.stringify(formatted));
+        setUser(formatted);
         return { success: true, role: userDetails.role };
       }
       return { success: false, message: response.data.message || 'Login failed' };

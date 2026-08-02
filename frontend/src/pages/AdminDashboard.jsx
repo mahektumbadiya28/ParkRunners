@@ -136,14 +136,14 @@ export default function AdminDashboard() {
             <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
                  <div className="w-full h-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-4xl">
-                   {user?.name?.charAt(0) || 'A'}
+                   {(user?.name || user?.fullName || 'System Admin').charAt(0).toUpperCase()}
                  </div>
                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                    <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
                  </div>
               </div>
               <div className="flex-1 pb-2">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || 'System Admin'}</h3>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || user?.fullName || 'System Admin'}</h3>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   <Badge variant="info" className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Root Access</Badge>
                   <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4"/> Global Server</span>
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
               <div className="card-premium p-6">
                 <h4 className="font-bold text-[var(--text-primary)] mb-6">Security & Authentication</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Admin Name" placeholder="Super Admin" value={user?.name || 'Super Admin'} readOnly />
+                  <Input label="Admin Name" placeholder="Super Admin" value={user?.name || user?.fullName || 'Super Admin'} readOnly />
                   <Input label="Admin Email" placeholder="admin@volenpark.com" value={user?.email || 'admin@volenpark.com'} readOnly />
                   <Input label="2FA Status" placeholder="Enabled via Authenticator" value="Enabled via Authenticator" readOnly />
                   <Input label="Session Timeout" placeholder="30 Minutes" value="30 Minutes" readOnly />

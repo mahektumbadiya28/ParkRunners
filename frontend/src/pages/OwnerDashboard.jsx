@@ -177,14 +177,14 @@ export default function OwnerDashboard() {
             <div className="px-6 pb-6 sm:px-10 relative flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-12 sm:-mt-16">
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[var(--bg-page)] bg-[var(--bg-card)] flex items-center justify-center shadow-xl overflow-hidden relative group cursor-pointer">
                  <div className="w-full h-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-black text-white text-4xl">
-                   {user?.name?.charAt(0) || 'C'}
+                   {(user?.name || user?.fullName || 'Car Owner').charAt(0).toUpperCase()}
                  </div>
                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                    <span className="text-white text-xs font-bold uppercase tracking-wider">Change</span>
                  </div>
               </div>
               <div className="flex-1 pb-2">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || 'Car Owner'}</h3>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{user?.name || user?.fullName || 'Car Owner'}</h3>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   <Badge variant="success" className="flex items-center gap-1"><CheckCircle className="w-3 h-3" /> Verified Member</Badge>
                   <span className="text-sm text-[var(--text-muted)] flex items-center gap-1"><MapPin className="w-4 h-4"/> Default: Mumbai</span>
@@ -235,7 +235,7 @@ export default function OwnerDashboard() {
               <div className="card-premium p-6">
                 <h4 className="font-bold text-[var(--text-primary)] mb-6">Account Settings</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Full Name" placeholder="John Doe" value={user?.name || 'John Doe'} readOnly />
+                  <Input label="Full Name" placeholder="John Doe" value={user?.name || user?.fullName || 'John Doe'} readOnly />
                   <Input label="Email" placeholder="owner@volenpark.com" value={user?.email || 'owner@volenpark.com'} readOnly />
                   <Input label="Phone Number" placeholder="+91 98765 43210" value={user?.phone || '+91 98765 43210'} readOnly />
                   <Input label="Default City" placeholder="Mumbai" value="Mumbai" readOnly />

@@ -167,11 +167,11 @@ export default function DashboardLayout({ children, navItems = [], topNavItems =
             </button>
             <div className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full bg-[var(--bg-card-hover)] border border-[var(--border-color)] cursor-pointer hover:border-indigo-500/30 transition-all">
               <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
-                {user?.name?.[0]?.toUpperCase() || 'U'}
+                {(user?.name || user?.fullName || 'User').charAt(0).toUpperCase()}
               </div>
               <div className="hidden sm:flex flex-col">
-                <span className="text-sm font-bold text-[var(--text-primary)] leading-none mb-1">{user?.name || 'User'}</span>
-                <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider leading-none">{user?.role}</span>
+                <span className="text-sm font-bold text-[var(--text-primary)] leading-none mb-1">{user?.name || user?.fullName || 'User'}</span>
+                <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wider leading-none">{user?.role ? user.role.replace('_', ' ') : 'User'}</span>
               </div>
             </div>
           </div>
