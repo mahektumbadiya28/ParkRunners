@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
-import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
@@ -26,6 +28,9 @@ import notificationRoutes from './routes/notificationRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import path from 'path';
+
 // Load environment variables
 dotenv.config();
 
@@ -44,14 +49,16 @@ const io = new Server(server, {
 // Make io accessible in controllers
 app.set('io', io);
 
+import mongoSanitize from 'express-mongo-sanitize';
+
 // Security & Optimization Middlewares
 app.use(helmet()); // Security headers
 app.use(cors());
 app.use(compression()); // Compress payloads
 app.use(morgan('dev')); // Logging API requests
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// app.use(mongoSanitize()); // Prevent NoSQL Injection
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(mongoSanitize()); // Prevent NoSQL Injection
 
 // Rate Limiting
 const apiLimiter = rateLimit({
@@ -88,15 +95,13 @@ app.use('/api/review', reviewRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Settings & User profile routes (single mount)
 app.use('/api/settings', settingsRoutes);
-app.use('/api/profile', settingsRoutes);
-app.use('/api/password', settingsRoutes);
-app.use('/api/login-history', settingsRoutes);
-app.use('/api/devices', settingsRoutes);
-app.use('/api/device', settingsRoutes);
-app.use('/api/export-data', settingsRoutes);
-app.use('/api/account', settingsRoutes);
-app.use('/api/system', settingsRoutes);
+app.use('/api/upload', uploadRoutes);
+
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 import { setupSocketHandlers } from './services/socketService.js';
 setupSocketHandlers();

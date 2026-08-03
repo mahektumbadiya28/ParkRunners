@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Car, Clock, CheckCircle, LayoutDashboard, Settings, Briefcase, User, MapPin } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
@@ -14,12 +14,15 @@ import { io } from 'socket.io-client';
 
 export default function ValetDashboard() {
   const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const activeTab = location.pathname.split('/')[2] || 'dashboard';
+  
+  const setActiveTab = (tab) => navigate(`/valet/${tab}`);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isOnline, setIsOnline] = useState(true);
-  const [activeTab, setActiveTab] = useState('dashboard');
   // const [actionLoading, setActionLoading] = useState(null);
-  const navigate = useNavigate();
 
   const fetchJobs = async () => {
     try {
@@ -61,25 +64,25 @@ export default function ValetDashboard() {
 
   const SIDEBAR_ITEMS = [
     { icon: Briefcase, label: 'Available Jobs', activeId: 'jobs' },
-    { icon: Settings, label: 'Settings', activeId: 'settings' }
+    { icon: Settings, label: 'Settings', to: '/settings' }
   ];
 
   const TOP_NAV_ITEMS = [
     { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
     { icon: User, label: 'Profile', activeId: 'profile' },
-    { icon: Settings, label: 'Settings', activeId: 'settings' }
+    { icon: Settings, label: 'Settings', to: '/settings' }
   ];
 
   return (
     <DashboardLayout
       title=""
-      navItems={SIDEBAR_ITEMS.map(item => item.activeId ? {
+      navItems={SIDEBAR_ITEMS.map(item => (item.activeId ? {
         icon: item.icon,
         label: item.label,
         onClick: () => setActiveTab(item.activeId),
         active: activeTab === item.activeId
-      } : { icon: item.icon, label: item.label, to: item.to })}
-      topNavItems={TOP_NAV_ITEMS.map(item => ({
+      } : { icon: item.icon, label: item.label, to: item.to }))}
+      topNavItems={TOP_NAV_ITEMS.map(item => (item.to ? { icon: item.icon, label: item.label, to: item.to } : {
         icon: item.icon,
         label: item.label,
         onClick: () => setActiveTab(item.activeId),

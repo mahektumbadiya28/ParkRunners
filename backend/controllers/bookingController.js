@@ -118,18 +118,19 @@ export const bookingAction = async (req, res, next) => {
 
     const role = req.user.role;
 
-    if (action === 'accept' && role === 'valet_driver') {
+    if (action === 'accept' && (role === 'valet' || role === 'valet_driver')) {
       booking.valetId = req.user._id;
       booking.bookingStatus = 'confirmed';
-    } else if (action === 'receive_car' && role === 'valet_driver') {
-      booking.bookingStatus = 'active';
-    } else if (action === 'parked' && role === 'valet_driver') {
+    } else if (action === 'receive_car' && (role === 'valet' || role === 'valet_driver')) {
+      booking.bookingStatus = 'moving';
+    } else if (action === 'parked' && (role === 'valet' || role === 'valet_driver')) {
+      booking.bookingStatus = 'parked';
       const spot = await ParkingSpace.findById(booking.parkingId);
       if (spot && spot.availableSlots > 0) {
         spot.availableSlots -= 1;
         await spot.save();
       }
-    } else if (action === 'bring_my_car' && role === 'car_owner') {
+    } else if (action === 'bring_my_car' && (role === 'owner' || role === 'car_owner')) {
       booking.bookingStatus = 'returning';
     } else if (action === 'complete') {
       booking.bookingStatus = 'completed';
@@ -138,7 +139,7 @@ export const bookingAction = async (req, res, next) => {
         spot.availableSlots += 1;
         await spot.save();
       }
-    } else if (action === 'cancel' && (role === 'car_owner' || role === 'admin')) {
+    } else if (action === 'cancel' && (role === 'owner' || role === 'car_owner' || role === 'admin')) {
       booking.bookingStatus = 'cancelled';
       const spot = await ParkingSpace.findById(booking.parkingId);
       if (spot) {

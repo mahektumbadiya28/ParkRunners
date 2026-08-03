@@ -36,11 +36,16 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  const currentRole = user.role === 'car_owner' ? 'owner' 
+                    : user.role === 'parking_provider' || user.role === 'space_provider' ? 'provider' 
+                    : user.role === 'valet_driver' ? 'valet' 
+                    : user.role;
+
+  if (allowedRoles && !allowedRoles.includes(currentRole)) {
     // Redirect to their default role dashboard
-    if (user.role === 'admin') return <Navigate to="/admin" replace />;
-    if (user.role === 'provider') return <Navigate to="/provider" replace />;
-    if (user.role === 'valet') return <Navigate to="/valet" replace />;
+    if (currentRole === 'admin') return <Navigate to="/admin" replace />;
+    if (currentRole === 'provider') return <Navigate to="/provider" replace />;
+    if (currentRole === 'valet') return <Navigate to="/valet" replace />;
     return <Navigate to="/owner" replace />;
   }
 
@@ -54,9 +59,13 @@ const AuthRoute = ({ children }) => {
   if (loading) return null;
 
   if (user) {
-    if (user.role === 'admin') return <Navigate to="/admin" replace />;
-    if (user.role === 'provider') return <Navigate to="/provider" replace />;
-    if (user.role === 'valet') return <Navigate to="/valet" replace />;
+    const currentRole = user.role === 'car_owner' ? 'owner' 
+                      : user.role === 'parking_provider' || user.role === 'space_provider' ? 'provider' 
+                      : user.role === 'valet_driver' ? 'valet' 
+                      : user.role;
+    if (currentRole === 'admin') return <Navigate to="/admin" replace />;
+    if (currentRole === 'provider') return <Navigate to="/provider" replace />;
+    if (currentRole === 'valet') return <Navigate to="/valet" replace />;
     return <Navigate to="/owner" replace />;
   }
 
@@ -81,13 +90,9 @@ export default function App() {
             <Route path="/settings" element={<ProtectedRoute allowedRoles={['owner', 'provider', 'valet', 'admin']}><SettingsPage /></ProtectedRoute>} />
 
             {/* Role Protected Dashboards */}
-            <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboard /></ProtectedRoute>} />
-
-            <Route path="/owner/vehicles" element={<ProtectedRoute allowedRoles={['owner']}><OwnerVehicles /></ProtectedRoute>} />
-
-            <Route path="/provider" element={<ProtectedRoute allowedRoles={['provider']}><ProviderDashboard /></ProtectedRoute>} />
-
-            <Route path="/valet" element={<ProtectedRoute allowedRoles={['valet']}><ValetDashboard /></ProtectedRoute>} />
+            <Route path="/owner/*" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboard /></ProtectedRoute>} />
+            <Route path="/provider/*" element={<ProtectedRoute allowedRoles={['provider']}><ProviderDashboard /></ProtectedRoute>} />
+            <Route path="/valet/*" element={<ProtectedRoute allowedRoles={['valet']}><ValetDashboard /></ProtectedRoute>} />
 
             <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
 

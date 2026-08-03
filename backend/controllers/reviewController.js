@@ -44,7 +44,7 @@ export const getUserReviews = async (req, res) => {
 // @route   GET /api/review/provider
 export const getProviderReviews = async (req, res) => {
   try {
-    const mySpaces = await ParkingSpace.find({ ownerId: req.user._id });
+    const mySpaces = await ParkingSpace.find({ providerId: req.user._id });
     const spaceIds = mySpaces.map(s => s._id);
 
     const bookings = await Booking.find({ parkingId: { $in: spaceIds } });

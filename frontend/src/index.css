@@ -263,3 +263,8 @@
 .input-premium::placeholder {
   color: var(--text-muted);
 }
+
+/* Skeleton Loader */
+.skeleton {
+  @apply bg-slate-200 dark:bg-slate-800 animate-pulse;
+}

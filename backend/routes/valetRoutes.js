@@ -12,10 +12,10 @@ const router = express.Router();
 router.use(protect);
 
 router.route('/')
-  .post(authorize('valet'), registerValetProfile)
-  .get(authorize('admin', 'owner', 'provider'), getValets);
+  .post(authorize('valet', 'valet_driver'), registerValetProfile)
+  .get(authorize('admin', 'owner', 'car_owner', 'provider', 'parking_provider'), getValets);
 
-router.put('/status', authorize('valet'), updateValetStatus);
-router.put('/location', authorize('valet'), updateValetLocation);
+router.put('/status', authorize('valet', 'valet_driver'), updateValetStatus);
+router.put('/location', authorize('valet', 'valet_driver'), updateValetLocation);
 
 export default router;

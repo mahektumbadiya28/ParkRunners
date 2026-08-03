@@ -14,6 +14,6 @@ router.use(protect);
 router.post('/create-order', createOrder);
 router.post('/verify', verifyPayment);
 router.get('/history', getPaymentHistory);
-router.get('/provider', authorize('provider'), getProviderPayments);
+router.get('/provider', authorize('provider', 'parking_provider'), getProviderPayments);
 
 export default router;

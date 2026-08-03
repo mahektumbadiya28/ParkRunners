@@ -97,7 +97,7 @@ export default function SettingsPage({ embedded = false }) {
 
   const fetchSystemStatus = async () => {
     try {
-      const res = await API.get('/system/status');
+      const res = await API.get('/settings/system/status');
       if (res.data.success && res.data.status) {
         setSystemStatus(res.data.status);
       }
@@ -125,7 +125,7 @@ export default function SettingsPage({ embedded = false }) {
         }
       };
 
-      const res = await API.put('/profile', payload);
+      const res = await API.put('/settings/profile', payload);
       if (res.data.success) {
         toast.success('Profile details updated successfully!');
         fetchSettings();
@@ -193,7 +193,7 @@ export default function SettingsPage({ embedded = false }) {
 
     setSaving(true);
     try {
-      const res = await API.put('/password', { currentPassword: current, newPassword: newPass });
+      const res = await API.put('/settings/password', { currentPassword: current, newPassword: newPass });
       if (res.data.success) {
         toast.success('Password changed successfully!');
         e.target.reset();
@@ -211,7 +211,7 @@ export default function SettingsPage({ embedded = false }) {
   // Devices & Sessions Revoke
   const handleRemoveDevice = async (deviceId) => {
     try {
-      const res = await API.delete(`/device/${deviceId}`);
+      const res = await API.delete(`/settings/device/${deviceId}`);
       if (res.data.success) {
         toast.success('Session revoked successfully');
         setDevicesList(prev => prev.filter(d => d.id !== deviceId));
@@ -223,7 +223,7 @@ export default function SettingsPage({ embedded = false }) {
 
   // Export Data
   const handleExportData = async () => {
-    const promise = API.post('/export-data');
+    const promise = API.post('/settings/export-data');
     toast.promise(promise, {
       loading: 'Preparing your personal data archive...',
       success: (res) => {
@@ -249,7 +249,7 @@ export default function SettingsPage({ embedded = false }) {
 
     setSaving(true);
     try {
-      const res = await API.delete('/account', { data: { action: dangerAction, otp: otpCode } });
+      const res = await API.delete('/settings/account', { data: { action: dangerAction, otp: otpCode } });
       if (res.data.success) {
         toast.success(res.data.message);
         setModalType(null);

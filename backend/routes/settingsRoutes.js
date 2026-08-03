@@ -15,25 +15,28 @@ import {
 
 const router = express.Router();
 
-// System Status (Public or Protected)
+// Public route (no auth required)
 router.get('/system/status', getSystemStatus);
 
-// Protected routes below
+// All routes below require authentication
 router.use(protect);
 
-// Main settings endpoint
-router.route('/')
-  .get(getSettings)
-  .put(updateSettings);
+// Main settings CRUD
+router.get('/', getSettings);
+router.put('/', updateSettings);
 
-// Specialized endpoints requested
-router.get('/settings', getSettings);
-router.put('/settings', updateSettings);
+// Profile
 router.put('/profile', updateProfile);
+
+// Password
 router.put('/password', updatePassword);
+
+// Login history / devices
 router.get('/login-history', getLoginHistory);
 router.get('/devices', getDevices);
 router.delete('/device/:id', deleteDevice);
+
+// Data & account
 router.post('/export-data', exportData);
 router.delete('/account', deleteAccount);
 

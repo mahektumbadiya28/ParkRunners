@@ -19,22 +19,21 @@ const bookingSchema = new mongoose.Schema({
   vehicleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Vehicle',
-    required: true,
   },
   valetId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Valet',
   },
   bookingDate: {
-    type: String, // e.g. "2026-07-30"
+    type: Date,
     required: true,
   },
   startTime: {
-    type: String,
+    type: Date,
     required: true,
   },
   endTime: {
-    type: String,
+    type: Date,
     required: true,
   },
   duration: {
@@ -52,7 +51,7 @@ const bookingSchema = new mongoose.Schema({
   },
   bookingStatus: {
     type: String,
-    enum: ['pending', 'confirmed', 'active', 'completed', 'cancelled'],
+    enum: ['pending', 'confirmed', 'active', 'moving', 'parked', 'returning', 'completed', 'cancelled'],
     default: 'pending',
   }
 }, {

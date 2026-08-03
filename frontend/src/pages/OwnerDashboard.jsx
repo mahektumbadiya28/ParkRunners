@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Car, MapPin, Clock, CheckCircle, XCircle, LayoutDashboard, Settings, User } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
@@ -23,10 +23,13 @@ const fadeUp = (delay = 0) => ({
 
 export default function OwnerDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const activeTab = location.pathname.split('/')[2] || 'dashboard';
+  
+  const setActiveTab = (tab) => navigate(`/owner/${tab}`);
 
   const fetchBookings = async () => {
     try {
@@ -65,13 +68,13 @@ export default function OwnerDashboard() {
   return (
     <DashboardLayout
       title=""
-      navItems={SIDEBAR_ITEMS.map(item => item.activeId ? {
+      navItems={SIDEBAR_ITEMS.map(item => (item.activeId ? {
         icon: item.icon,
         label: item.label,
         onClick: () => setActiveTab(item.activeId),
         active: activeTab === item.activeId
-      } : { icon: item.icon, label: item.label, to: item.to })}
-      topNavItems={TOP_NAV_ITEMS.map(item => ({
+      } : { icon: item.icon, label: item.label, to: item.to }))}
+      topNavItems={TOP_NAV_ITEMS.map(item => (item.to ? { icon: item.icon, label: item.label, to: item.to } : {
         icon: item.icon,
         label: item.label,
         onClick: () => setActiveTab(item.activeId),
@@ -80,7 +83,16 @@ export default function OwnerDashboard() {
     >
       {activeTab === 'dashboard' && (
         <>
-          {/* Welcome */}
+          {loading ? (
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                {[1, 2, 3, 4].map(i => <div key={i} className="skeleton h-32 w-full rounded-2xl" />)}
+              </div>
+              <div className="skeleton h-64 w-full rounded-2xl" />
+            </div>
+          ) : (
+            <>
+              {/* Welcome */}
           <div className="mb-8">
             <h2 className="text-2xl font-black text-[var(--text-primary)]">Your Parking Hub</h2>
             <p className="text-[var(--text-muted)] mt-1">Track bookings, find spots, and manage your garage from one place.</p>
@@ -159,6 +171,8 @@ export default function OwnerDashboard() {
               </div>
             )}
           </motion.div>
+            </>
+          )}
         </>
       )}
 
