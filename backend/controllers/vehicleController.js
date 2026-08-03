@@ -34,7 +34,7 @@ export const getVehicleById = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Vehicle not found' });
     }
     // Make sure user owns the vehicle
-    if (vehicle.ownerId.toString() !== req.user._id && req.user.role !== 'admin') {
+    if (vehicle.ownerId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
     res.json({ success: true, data: vehicle });
@@ -51,7 +51,7 @@ export const updateVehicle = async (req, res, next) => {
     if (!vehicle) {
       return res.status(404).json({ success: false, message: 'Vehicle not found' });
     }
-    if (vehicle.ownerId.toString() !== req.user._id && req.user.role !== 'admin') {
+    if (vehicle.ownerId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
     vehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, {
@@ -72,7 +72,7 @@ export const deleteVehicle = async (req, res, next) => {
     if (!vehicle) {
       return res.status(404).json({ success: false, message: 'Vehicle not found' });
     }
-    if (vehicle.ownerId.toString() !== req.user._id && req.user.role !== 'admin') {
+    if (vehicle.ownerId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
     await Vehicle.findByIdAndDelete(req.params.id);

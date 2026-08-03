@@ -64,13 +64,13 @@ export default function ValetDashboard() {
 
   const SIDEBAR_ITEMS = [
     { icon: Briefcase, label: 'Available Jobs', activeId: 'jobs' },
-    { icon: Settings, label: 'Settings', to: '/settings' }
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
 
   const TOP_NAV_ITEMS = [
     { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
     { icon: User, label: 'Profile', activeId: 'profile' },
-    { icon: Settings, label: 'Settings', to: '/settings' }
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
 
   return (

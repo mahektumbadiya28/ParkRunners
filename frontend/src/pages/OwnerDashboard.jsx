@@ -10,6 +10,7 @@ import Input from '../components/ui/Input';
 import { listMyBookings, bookingAction } from '../services/parking';
 import { useAuth } from '../context/AuthContext';
 import SettingsPage from './SettingsPage';
+import OwnerVehicles from '../components/owner/OwnerVehicles';
 
 const statusVariant = {
   pending: 'warning', confirmed: 'info', completed: 'success', cancelled: 'danger',
@@ -177,10 +178,7 @@ export default function OwnerDashboard() {
       )}
 
       {activeTab === 'vehicles' && (
-        <div className="card-premium p-6">
-          <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">My Vehicles</h3>
-          <p className="text-[var(--text-muted)]">Vehicle management is coming soon.</p>
-        </div>
+        <OwnerVehicles />
       )}
       {activeTab === 'profile' && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
