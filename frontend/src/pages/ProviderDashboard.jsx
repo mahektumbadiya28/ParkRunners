@@ -236,9 +236,12 @@ export default function ProviderDashboard() {
 
   return (
     <DashboardLayout
-      navItems={SIDEBAR_ITEMS.map(item => (item.to ? { icon: item.icon, label: item.label, to: item.to } : {
-        icon: item.icon, label: item.label, onClick: () => setActiveTab(item.activeId), active: activeTab === item.activeId
-      }))}
+      navItems={[
+        ...SIDEBAR_ITEMS.map(item => (item.to ? { icon: item.icon, label: item.label, to: item.to } : {
+          icon: item.icon, label: item.label, onClick: () => setActiveTab(item.activeId), active: activeTab === item.activeId
+        })),
+        { icon: Star, label: 'Rate Platform', onClick: () => setPlatformRatingModal({ open: true, rating: 5, comment: '' }) }
+      ]}
       topNavItems={TOP_NAV_ITEMS.map(item => (item.to ? { icon: item.icon, label: item.label, to: item.to } : {
         icon: item.icon,
         label: item.label,
@@ -293,10 +296,6 @@ export default function ProviderDashboard() {
       </div>
 {
   activeTab === 'dashboard' && (
-    <div className="flex items-center gap-3">
-      <Button onClick={() => setPlatformRatingModal({ open: true, rating: 5, comment: '' })} className="bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 border border-indigo-500/20">
-        <Star className="w-4 h-4 mr-2" /> Rate Our Platform
-      </Button>
     <Button icon={Plus} onClick={() => {
       setEditingSpotId(null);
       setForm({
@@ -308,7 +307,6 @@ export default function ProviderDashboard() {
     }}>
       List a New Space
     </Button>
-    </div>
   )
 }
         </div >
