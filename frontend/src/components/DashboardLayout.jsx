@@ -280,7 +280,11 @@ export default function DashboardLayout({ children, navItems = [], topNavItems =
 
                     <div className="pt-2 border-t border-[var(--border-color)] flex gap-2">
                       <button
-                        onClick={() => { setShowRoleMenu(false); navigate('/settings'); }}
+                        onClick={() => {
+                          setShowRoleMenu(false);
+                          const currentNorm = user?.role === 'car_owner' ? 'owner' : user?.role === 'space_provider' ? 'provider' : user?.role === 'valet_driver' ? 'valet' : user?.role;
+                          navigate(`/${currentNorm}/settings`);
+                        }}
                         className="flex-1 text-xs font-bold py-2.5 rounded-xl text-center text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] flex items-center justify-center gap-1.5 transition-all"
                       >
                         <Settings className="w-3.5 h-3.5" /> Settings

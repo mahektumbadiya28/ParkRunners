@@ -193,14 +193,13 @@ export default function ProviderDashboard() {
     { icon: Calendar, label: 'Bookings', activeId: 'bookings' },
     { icon: CreditCard, label: 'Earnings', activeId: 'earnings' },
     { icon: BarChart3, label: 'Analytics', activeId: 'analytics' },
-    { icon: MessageSquare, label: 'Reviews', activeId: 'reviews' },
-    { icon: Settings, label: 'Settings', activeId: 'settings' }
+    { icon: MessageSquare, label: 'Reviews', activeId: 'reviews' }
   ];
 
   const TOP_NAV_ITEMS = [
     { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
     { icon: User, label: 'Profile', activeId: 'profile' },
-    { icon: Settings, label: 'Settings', to: '/settings' }
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
 
   // Helper counters

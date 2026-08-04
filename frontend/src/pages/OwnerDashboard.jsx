@@ -58,14 +58,13 @@ export default function OwnerDashboard() {
 
   const SIDEBAR_ITEMS = [
     { icon: MapPin, label: 'Find Parking', to: '/map' },
-    { icon: Car, label: 'My Vehicles', activeId: 'vehicles' },
-    { icon: Settings, label: 'Settings', activeId: 'settings' }
+    { icon: Car, label: 'My Vehicles', activeId: 'vehicles' }
   ];
 
   const TOP_NAV_ITEMS = [
     { icon: LayoutDashboard, label: 'Dashboard', activeId: 'dashboard' },
     { icon: User, label: 'Profile', activeId: 'profile' },
-    { icon: Settings, label: 'Settings', to: '/settings' }
+    { icon: Settings, label: 'Settings', activeId: 'settings' }
   ];
 
   return (

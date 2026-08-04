@@ -63,8 +63,7 @@ export default function ValetDashboard() {
   const pending = jobs.filter(j => j.bookingStatus === 'pending').length;
 
   const SIDEBAR_ITEMS = [
-    { icon: Briefcase, label: 'Available Jobs', activeId: 'jobs' },
-    { icon: Settings, label: 'Settings', activeId: 'settings' }
+    { icon: Briefcase, label: 'Available Jobs', activeId: 'jobs' }
   ];
 
   const TOP_NAV_ITEMS = [
