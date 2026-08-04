@@ -55,7 +55,7 @@ export const updateVehicle = async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
     vehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     }).lean();
     res.json({ success: true, data: vehicle });

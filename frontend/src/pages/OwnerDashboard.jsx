@@ -11,6 +11,7 @@ import { listMyBookings, bookingAction } from '../services/parking';
 import { useAuth } from '../context/AuthContext';
 import SettingsPage from './SettingsPage';
 import OwnerVehicles from '../components/owner/OwnerVehicles';
+import { useSocket } from '../hooks/useSocket';
 
 const statusVariant = {
   pending: 'warning', confirmed: 'info', completed: 'success', cancelled: 'danger',
@@ -41,6 +42,12 @@ export default function OwnerDashboard() {
   };
 
   useEffect(() => { fetchBookings(); }, []);
+
+  useSocket({
+    'booking_update': (data) => {
+      fetchBookings();
+    }
+  });
 
   const stats = useMemo(() => {
     return {

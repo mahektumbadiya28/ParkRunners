@@ -60,7 +60,7 @@ export default function ProviderDashboard() {
 
   // Socket for live updates
   useSocket({
-    'booking_updated': (data) => {
+    'booking_update': (data) => {
       showToast(`🔔 Booking status updated to ${data.status}!`);
       fetchData();
     },

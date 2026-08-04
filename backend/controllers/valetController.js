@@ -47,7 +47,7 @@ export const updateValetStatus = async (req, res, next) => {
     const valet = await Valet.findOneAndUpdate(
       { userId: req.user._id },
       { online },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     ).lean();
 
     if (!valet) {
@@ -68,7 +68,7 @@ export const updateValetLocation = async (req, res, next) => {
     const valet = await Valet.findOneAndUpdate(
       { userId: req.user._id },
       { currentLocation: { latitude, longitude } },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     ).lean();
 
     if (!valet) {

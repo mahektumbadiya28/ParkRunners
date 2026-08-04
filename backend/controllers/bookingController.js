@@ -11,7 +11,7 @@ export const createBooking = async (req, res, next) => {
     const spot = await ParkingSpace.findOneAndUpdate(
       { _id: spotId, status: 'active', availableSlots: { $gt: 0 } },
       { $inc: { availableSlots: -1 } },
-      { new: true }
+      { returnDocument: 'after' }
     );
     
     if (!spot) {

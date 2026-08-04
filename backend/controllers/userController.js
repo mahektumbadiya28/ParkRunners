@@ -23,7 +23,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 export const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
+    returnDocument: 'after',
     runValidators: true,
   });
   if (!user) {

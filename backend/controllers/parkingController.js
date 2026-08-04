@@ -92,7 +92,7 @@ export const updateSpot = async (req, res, next) => {
     const spot = await ParkingSpace.findOneAndUpdate(
       { _id: req.params.id, providerId: req.user._id },
       req.body,
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     ).lean();
     
     if (!spot) return res.status(404).json({ success: false, message: 'Spot not found or unauthorized' });
@@ -126,7 +126,7 @@ export const approveSpot = async (req, res, next) => {
     const spot = await ParkingSpace.findByIdAndUpdate(
       req.params.id,
       { status: approved ? 'active' : 'inactive' },
-      { new: true }
+      { returnDocument: 'after' }
     ).lean();
     
     if (!spot) return res.status(404).json({ success: false, message: 'Spot not found' });
