@@ -29,6 +29,7 @@ import analyticsRoutes from './routes/analyticsRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
 import path from 'path';
 
 // Load environment variables
@@ -101,6 +102,7 @@ app.use('/api/admin', adminRoutes);
 // Settings & User profile routes (single mount)
 app.use('/api/settings', settingsRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

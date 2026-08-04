@@ -69,7 +69,7 @@ export const myBookings = async (req, res, next) => {
       Booking.find({ ownerId: req.user._id })
         .populate('parkingId')
         .populate('vehicleId')
-        .populate('valetId', 'fullName phone')
+        .populate({ path: 'valetId', populate: { path: 'userId', select: 'fullName name phone' } })
         .sort('-createdAt')
         .skip(skip)
         .limit(limit)

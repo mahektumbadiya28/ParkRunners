@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Car, MapPin, Clock, CheckCircle, XCircle, LayoutDashboard, Settings, User } from 'lucide-react';
+import { Car, MapPin, Clock, CheckCircle, XCircle, LayoutDashboard, Settings, User, Star } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
@@ -12,6 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import SettingsPage from './SettingsPage';
 import OwnerVehicles from '../components/owner/OwnerVehicles';
 import { useSocket } from '../hooks/useSocket';
+import API from '../services/api';
 
 const statusVariant = {
   pending: 'warning', confirmed: 'info', completed: 'success', cancelled: 'danger',
@@ -29,6 +30,8 @@ export default function OwnerDashboard() {
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ratingModal, setRatingModal] = useState({ open: false, bookingId: null, valetUserId: null, rating: 5, comment: '' });
+  const [submittingRating, setSubmittingRating] = useState(false);
   const activeTab = location.pathname.split('/')[2] || 'dashboard';
   
   const setActiveTab = (tab) => navigate(`/owner/${tab}`);

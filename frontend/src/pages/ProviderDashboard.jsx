@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, MapPin, Plus, CheckCircle, XCircle, BarChart3, Settings,
   MessageSquare, User, CreditCard, Bell, Moon, Sun, Search, Calendar,
-  TrendingUp, Activity, ShieldCheck, IndianRupee, Award, Clock, HelpCircle, AlertTriangle
+  TrendingUp, Activity, ShieldCheck, IndianRupee, Award, Clock, HelpCircle, AlertTriangle, Star
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -36,6 +36,25 @@ export default function ProviderDashboard() {
 
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
+  const [platformRatingModal, setPlatformRatingModal] = useState({ open: false, rating: 5, comment: '' });
+  const [submittingPlatformFeedback, setSubmittingPlatformFeedback] = useState(false);
+
+  const handlePlatformFeedbackSubmit = async () => {
+    if (!platformRatingModal.rating) return alert('Please select a rating');
+    setSubmittingPlatformFeedback(true);
+    try {
+      await API.post('/feedback', {
+        rating: platformRatingModal.rating,
+        comment: platformRatingModal.comment
+      });
+      showToast('🎉 Thank you for your feedback!');
+      setPlatformRatingModal({ open: false, rating: 5, comment: '' });
+    } catch (e) {
+      alert(e.response?.data?.message || 'Failed to submit feedback');
+    } finally {
+      setSubmittingPlatformFeedback(false);
+    }
+  };
 
   // Add Parking Step Wizard Form State
   const [addStep, setAddStep] = useState(1);
@@ -274,6 +293,10 @@ export default function ProviderDashboard() {
       </div>
 {
   activeTab === 'dashboard' && (
+    <div className="flex items-center gap-3">
+      <Button onClick={() => setPlatformRatingModal({ open: true, rating: 5, comment: '' })} className="bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 border border-indigo-500/20">
+        <Star className="w-4 h-4 mr-2" /> Rate Our Platform
+      </Button>
     <Button icon={Plus} onClick={() => {
       setEditingSpotId(null);
       setForm({
@@ -285,6 +308,7 @@ export default function ProviderDashboard() {
     }}>
       List a New Space
     </Button>
+    </div>
   )
 }
         </div >
@@ -1088,6 +1112,40 @@ export default function ProviderDashboard() {
 }
 
       </div >
+
+      {platformRatingModal.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="glass-panel w-full max-w-md p-6 relative">
+            <button onClick={() => setPlatformRatingModal({ open: false, rating: 5, comment: '' })} className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+              <XCircle className="w-6 h-6" />
+            </button>
+            <h3 className="text-2xl font-black text-[var(--text-primary)] mb-2">Rate Our Service</h3>
+            <p className="text-[var(--text-muted)] text-sm mb-6">We value your feedback. Let us know how we can improve the platform!</p>
+            
+            <div className="flex items-center justify-center gap-2 mb-6">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button key={star} type="button" onClick={() => setPlatformRatingModal({ ...platformRatingModal, rating: star })} className="focus:outline-none transition-transform hover:scale-110">
+                  <Star className={`w-10 h-10 ${platformRatingModal.rating >= star ? 'text-indigo-500 fill-indigo-500' : 'text-[var(--text-muted)] opacity-30'}`} />
+                </button>
+              ))}
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">Leave a comment (optional)</label>
+              <textarea
+                value={platformRatingModal.comment}
+                onChange={(e) => setPlatformRatingModal({ ...platformRatingModal, comment: e.target.value })}
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-3 text-[var(--text-primary)] focus:outline-none focus:border-indigo-500 min-h-[100px] resize-none"
+                placeholder="What do you love? What can we improve?"
+              />
+            </div>
+
+            <Button onClick={handlePlatformFeedbackSubmit} className="w-full justify-center bg-indigo-600 hover:bg-indigo-700" disabled={submittingPlatformFeedback}>
+              {submittingPlatformFeedback ? 'Submitting...' : 'Submit Feedback'}
+            </Button>
+          </motion.div>
+        </div>
+      )}
     </DashboardLayout >
   );
 }

@@ -19,7 +19,7 @@ export const createReview = async (req, res) => {
       fromUser: req.user._id,
       toUser,
       rating,
-      review
+      comment: review
     });
 
     res.status(201).json({ success: true, data: newReview });
