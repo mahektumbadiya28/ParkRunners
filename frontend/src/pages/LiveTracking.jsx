@@ -1,17 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { io } from 'socket.io-client';
 import { ArrowLeft, MapPin, Navigation, Clock, CheckCircle, Car, Shield } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import { bookingAction, listSpots } from '../services/parking'; // We'll need a getBooking call, wait, bookingAction is exported from parking.js
-// Let's actually import `API` directly or add getBooking. Let's add getBooking.
+import { bookingAction } from '../services/parking';
 import toast from 'react-hot-toast';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+
+const pulseMarker = new L.divIcon({
+  className: 'custom-pulse-marker',
+  html: `<div class="relative flex h-8 w-8 items-center justify-center">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-4 w-4 bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.8)] border-2 border-white"></span>
+         </div>`,
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+});
+
+const mockRoute = [
+  [23.0225, 72.5714],
+  [23.0235, 72.5730],
+  [23.0255, 72.5745],
+];
 
 const SOCKET_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5005';
 
@@ -57,28 +72,31 @@ export default function LiveTracking() {
   const currentStepIndex = STATUS_STEPS.findIndex(s => s.id === status) || 0;
 
   const handleBringMyCar = async () => {
-    setLoadingAction(true);
+    // Optimistic Update
+    const prevStatus = status;
+    setStatus('returning');
+    toast.success('Valet is on the way with your car!');
+    
     try {
       await bookingAction(id, 'bring_my_car');
-      toast.success('Valet is on the way with your car!');
-      setStatus('returning');
     } catch (e) {
+      setStatus(prevStatus); // Rollback
       toast.error('Action failed. Try again.');
-    } finally {
-      setLoadingAction(false);
     }
   };
 
   const handleComplete = async () => {
-    setLoadingAction(true);
+    // Optimistic UI
+    const prevStatus = status;
+    setStatus('completed');
+    toast.success('Thanks for using VolenPark!');
+    
     try {
       await bookingAction(id, 'complete');
-      toast.success('Thanks for using VolenPark!');
       navigate(`/payment/${id}`);
     } catch (e) {
+      setStatus(prevStatus); // Rollback
       toast.error('Action failed.');
-    } finally {
-      setLoadingAction(false);
     }
   };
 
@@ -92,7 +110,7 @@ export default function LiveTracking() {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Tracking Info & Timeline */}
           <div className="space-y-6">
-            <div className="card-premium p-6">
+            <div className="glass-panel p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h2 className="text-xl font-black text-[var(--text-primary)]">Valet Tracking</h2>
@@ -161,21 +179,24 @@ export default function LiveTracking() {
           </div>
 
           {/* Map View */}
-          <div className="h-[600px] rounded-2xl overflow-hidden border border-[var(--border-color)] relative z-0">
-            <MapContainer center={[23.0225, 72.5714]} zoom={14} className="w-full h-full">
-              <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-              />
-              <Marker position={[23.0225, 72.5714]}>
-                <Popup>Valet Location</Popup>
-              </Marker>
-            </MapContainer>
+          <div className="h-[600px] rounded-2xl overflow-hidden border border-[var(--glass-border)] relative z-0 glass-panel p-2">
+            <div className="w-full h-full rounded-xl overflow-hidden relative">
+              <MapContainer center={[23.0225, 72.5714]} zoom={14} className="w-full h-full">
+                <TileLayer
+                  url="https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png"
+                />
+                <Polyline positions={mockRoute} color="#6366F1" weight={4} dashArray="10 10" className="animate-pulse" />
+                <Marker position={[23.0225, 72.5714]} icon={pulseMarker}>
+                  <Popup className="glass-panel text-white border-0 font-bold">Valet Location</Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+          </div>
             
             {/* Overlay Gradient for aesthetics */}
             <div className="absolute inset-0 pointer-events-none rounded-2xl shadow-[inset_0_0_50px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_50px_rgba(0,0,0,0.5)] z-[400]"></div>
           </div>
         </div>
-      </div>
     </DashboardLayout>
   );
 }

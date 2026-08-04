@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import LandingPage from './pages/LandingPage';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import OwnerDashboard from './pages/OwnerDashboard';
-import ProviderDashboard from './pages/ProviderDashboard';
-import ValetDashboard from './pages/ValetDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import ParkingMap from './pages/ParkingMap';
-import PaymentPage from './pages/PaymentPage';
-import OwnerVehicles from './pages/OwnerVehicles';
-import BookingFlow from './pages/BookingFlow';
-import LiveTracking from './pages/LiveTracking';
-import JobView from './pages/JobView';
-import ValetKYC from './pages/ValetKYC';
-import SettingsPage from './pages/SettingsPage';
 import { ThemeProvider } from './context/ThemeContext';
 import ThemeToggle from './components/ThemeToggle';
+
+// Lazy load pages for code-splitting
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const OwnerDashboard = lazy(() => import('./pages/OwnerDashboard'));
+const ProviderDashboard = lazy(() => import('./pages/ProviderDashboard'));
+const ValetDashboard = lazy(() => import('./pages/ValetDashboard'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const ParkingMap = lazy(() => import('./pages/ParkingMap'));
+const PaymentPage = lazy(() => import('./pages/PaymentPage'));
+const BookingFlow = lazy(() => import('./pages/BookingFlow'));
+const LiveTracking = lazy(() => import('./pages/LiveTracking'));
+const JobView = lazy(() => import('./pages/JobView'));
+const ValetKYC = lazy(() => import('./pages/ValetKYC'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 // Protected Route Component to enforce role-based access
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -25,16 +26,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   if (loading) {
     return (
-      <div className="bg-gray-50 dark:bg-[#0b0f19] text-gray-400 min-h-screen flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin">
-        </div>
+      <div className="bg-[var(--bg-page)] text-[var(--text-muted)] min-h-screen flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
       </div>
     );
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" replace />;
 
   const currentRole = user.role === 'car_owner' ? 'owner' 
                     : user.role === 'parking_provider' || user.role === 'space_provider' ? 'provider' 
@@ -42,7 +40,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
                     : user.role;
 
   if (allowedRoles && !allowedRoles.includes(currentRole)) {
-    // Redirect to their default role dashboard
     if (currentRole === 'admin') return <Navigate to="/admin" replace />;
     if (currentRole === 'provider') return <Navigate to="/provider" replace />;
     if (currentRole === 'valet') return <Navigate to="/valet" replace />;
@@ -72,44 +69,49 @@ const AuthRoute = ({ children }) => {
   return children;
 };
 
+// Loading fallback for Suspense
+const PageLoader = () => (
+  <div className="bg-[var(--bg-page)] min-h-screen flex items-center justify-center">
+    <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+  </div>
+);
+
 export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <ThemeToggle />
         <Router>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
 
-            {/* Auth Routes (Redirects if already logged in) */}
-            <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
-            <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
+              {/* Auth Routes */}
+              <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
+              <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
 
-            {/* Settings Route for All Authenticated Users */}
-            <Route path="/settings" element={<ProtectedRoute allowedRoles={['owner', 'provider', 'valet', 'admin']}><SettingsPage /></ProtectedRoute>} />
+              {/* Settings */}
+              <Route path="/settings" element={<ProtectedRoute allowedRoles={['owner', 'provider', 'valet', 'admin']}><SettingsPage /></ProtectedRoute>} />
 
-            {/* Role Protected Dashboards */}
-            <Route path="/owner/*" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboard /></ProtectedRoute>} />
-            <Route path="/provider/*" element={<ProtectedRoute allowedRoles={['provider']}><ProviderDashboard /></ProtectedRoute>} />
-            <Route path="/valet/*" element={<ProtectedRoute allowedRoles={['valet']}><ValetDashboard /></ProtectedRoute>} />
+              {/* Dashboards */}
+              <Route path="/owner/*" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboard /></ProtectedRoute>} />
+              <Route path="/provider/*" element={<ProtectedRoute allowedRoles={['provider']}><ProviderDashboard /></ProtectedRoute>} />
+              <Route path="/valet/*" element={<ProtectedRoute allowedRoles={['valet']}><ValetDashboard /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
 
-            <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+              {/* Additional Pages */}
+              <Route path="/valet/job/:id" element={<ProtectedRoute allowedRoles={['valet']}><JobView /></ProtectedRoute>} />
+              <Route path="/valet/kyc" element={<ProtectedRoute allowedRoles={['valet']}><ValetKYC /></ProtectedRoute>} />
+              <Route path="/map" element={<ProtectedRoute allowedRoles={['owner']}><ParkingMap /></ProtectedRoute>} />
+              <Route path="/payment/:id?" element={<ProtectedRoute allowedRoles={['owner']}><PaymentPage /></ProtectedRoute>} />
+              <Route path="/book/:id" element={<ProtectedRoute allowedRoles={['owner']}><BookingFlow /></ProtectedRoute>} />
+              <Route path="/tracking/:id" element={<ProtectedRoute allowedRoles={['owner']}><LiveTracking /></ProtectedRoute>} />
 
-            <Route path="/valet/job/:id" element={<ProtectedRoute allowedRoles={['valet']}><JobView /></ProtectedRoute>} />
-
-            <Route path="/valet/kyc" element={<ProtectedRoute allowedRoles={['valet']}><ValetKYC /></ProtectedRoute>} />
-
-            <Route path="/map" element={<ProtectedRoute allowedRoles={['owner']}><ParkingMap /></ProtectedRoute>} />
-
-            <Route path="/payment/:id?" element={<ProtectedRoute allowedRoles={['owner']}><PaymentPage /></ProtectedRoute>} />
-
-            <Route path="/book/:id" element={<ProtectedRoute allowedRoles={['owner']}><BookingFlow /></ProtectedRoute>} />
-            <Route path="/tracking/:id" element={<ProtectedRoute allowedRoles={['owner']}><LiveTracking /></ProtectedRoute>} />
-
-            {/* Catch All Redirect */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+              {/* Catch All Redirect */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
         </Router>
       </AuthProvider>
     </ThemeProvider>

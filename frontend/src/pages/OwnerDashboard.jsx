@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Car, MapPin, Clock, CheckCircle, XCircle, LayoutDashboard, Settings, User } from 'lucide-react';
@@ -42,12 +42,14 @@ export default function OwnerDashboard() {
 
   useEffect(() => { fetchBookings(); }, []);
 
-  const stats = {
-    total: bookings.length,
-    active: bookings.filter(b => b.bookingStatus === 'confirmed').length,
-    completed: bookings.filter(b => b.bookingStatus === 'completed').length,
-    spent: bookings.filter(b => b.bookingStatus === 'completed').reduce((s, b) => s + (b.totalAmount || 0), 0),
-  };
+  const stats = useMemo(() => {
+    return {
+      total: bookings.length,
+      active: bookings.filter(b => b.bookingStatus === 'confirmed').length,
+      completed: bookings.filter(b => b.bookingStatus === 'completed').length,
+      spent: bookings.filter(b => b.bookingStatus === 'completed').reduce((s, b) => s + (b.totalAmount || 0), 0),
+    };
+  }, [bookings]);
 
   const handleCancel = async (id) => {
     try { await bookingAction(id, 'cancel'); fetchBookings(); }
@@ -109,7 +111,7 @@ export default function OwnerDashboard() {
 
           {/* Quick Actions */}
           <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            <motion.div {...fadeUp(0.1)} className="card-premium p-6 cursor-pointer group" onClick={() => navigate('/map')}>
+            <motion.div {...fadeUp(0.1)} className="glass-panel p-6 cursor-pointer group" onClick={() => navigate('/map')}>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
                   <MapPin className="w-6 h-6 text-white" />
@@ -120,7 +122,7 @@ export default function OwnerDashboard() {
                 </div>
               </div>
             </motion.div>
-            <motion.div {...fadeUp(0.15)} className="card-premium p-6 cursor-pointer group" onClick={() => navigate('/payment')}>
+            <motion.div {...fadeUp(0.15)} className="glass-panel p-6 cursor-pointer group" onClick={() => navigate('/payment')}>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-500/25">
                   <Car className="w-6 h-6 text-white" />
@@ -134,7 +136,7 @@ export default function OwnerDashboard() {
           </div>
 
           {/* Bookings Table */}
-          <motion.div {...fadeUp(0.2)} className="card-premium overflow-hidden">
+          <motion.div {...fadeUp(0.2)} className="glass-panel overflow-hidden">
             <div className="px-6 py-5 border-b border-[var(--border-color)] flex items-center justify-between">
               <h3 className="font-bold text-[var(--text-primary)]">Recent Bookings</h3>
               <Badge variant="info">{bookings.length} total</Badge>
@@ -213,7 +215,7 @@ export default function OwnerDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column */}
             <div className="space-y-6">
-              <div className="card-premium p-6">
+              <div className="glass-panel p-6">
                 <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-emerald-500" /> Personal Info</h4>
                 <div className="space-y-4">
                   <div>
@@ -231,7 +233,7 @@ export default function OwnerDashboard() {
                 </div>
               </div>
 
-              <div className="card-premium p-6 bg-gradient-to-br from-emerald-500/10 to-transparent border-emerald-500/20">
+              <div className="glass-panel p-6 bg-gradient-to-br from-emerald-500/10 to-transparent border-emerald-500/20">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
                     <CheckCircle className="w-5 h-5" />
@@ -246,7 +248,7 @@ export default function OwnerDashboard() {
 
             {/* Right Column */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="card-premium p-6">
+              <div className="glass-panel p-6">
                 <h4 className="font-bold text-[var(--text-primary)] mb-6">Account Settings</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input label="Full Name" placeholder="John Doe" value={user?.name || user?.fullName || 'John Doe'} readOnly />
@@ -259,7 +261,7 @@ export default function OwnerDashboard() {
                 </div>
               </div>
 
-              <div className="card-premium p-6 border-red-500/20 bg-red-500/5">
+              <div className="glass-panel p-6 border-red-500/20 bg-red-500/5">
                 <h4 className="font-bold text-red-500 mb-2">Danger Zone</h4>
                 <p className="text-xs text-[var(--text-muted)] mb-4">Permanently delete your account and all booking history. This action cannot be undone.</p>
                 <Button variant="outline" className="text-red-500 border-red-500/30 hover:bg-red-500 hover:text-white">Delete Account</Button>

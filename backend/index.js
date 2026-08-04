@@ -50,6 +50,7 @@ const io = new Server(server, {
 app.set('io', io);
 
 import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
 
 // Security & Optimization Middlewares
 app.use(helmet()); // Security headers
@@ -59,6 +60,7 @@ app.use(morgan('dev')); // Logging API requests
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(mongoSanitize()); // Prevent NoSQL Injection
+app.use(xss()); // Prevent XSS vulnerabilities
 
 // Rate Limiting
 const apiLimiter = rateLimit({

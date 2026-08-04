@@ -142,6 +142,19 @@
   border: 1px solid var(--glass-border);
 }
 
+.glass-panel {
+  background: rgba(30, 41, 59, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
 /* Premium gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%);
@@ -264,7 +277,27 @@
   color: var(--text-muted);
 }
 
-/* Skeleton Loader */
-.skeleton {
-  @apply bg-slate-200 dark:bg-slate-800 animate-pulse;
+/* Map Dark Mode Filters */
+.dark .leaflet-layer,
+.dark .leaflet-control-zoom-in,
+.dark .leaflet-control-zoom-out,
+.dark .leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Status Badges */
+.status-badge {
+  @apply px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border;
+}
+.status-emerald {
+  @apply bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.2)];
+}
+.status-amber {
+  @apply bg-amber-500/10 text-amber-500 border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.2)];
+}
+.status-rose {
+  @apply bg-rose-500/10 text-rose-500 border-rose-500/20 shadow-[0_0_10px_rgba(225,29,72,0.2)];
+}
+.status-indigo {
+  @apply bg-indigo-500/10 text-indigo-400 border-indigo-500/20 shadow-[0_0_10px_rgba(99,102,241,0.2)];
 }

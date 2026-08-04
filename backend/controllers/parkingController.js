@@ -1,11 +1,19 @@
 import ParkingSpace from '../models/ParkingSpace.js';
+import NodeCache from 'node-cache';
 
-// @desc   List all approved, available spots
+const cache = new NodeCache({ stdTTL: 60, checkperiod: 120 });
+
+// @desc   List all approved, available spots (Cached)
 // @route  GET /api/spots
 export const listSpots = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 20;
     const skip = parseInt(req.query.skip) || 0;
+    const cacheKey = `spots_${skip}_${limit}`;
+
+    if (cache.has(cacheKey)) {
+      return res.json(cache.get(cacheKey));
+    }
 
     const spots = await ParkingSpace.find({ status: 'active' })
       .populate('providerId', 'fullName email')
@@ -13,7 +21,10 @@ export const listSpots = async (req, res, next) => {
       .limit(limit)
       .lean(); // Optimization
 
-    res.json({ success: true, count: spots.length, data: spots });
+    const response = { success: true, count: spots.length, data: spots };
+    cache.set(cacheKey, response);
+
+    res.json(response);
   } catch (err) {
     next(err);
   }
@@ -49,12 +60,14 @@ export const createSpot = async (req, res, next) => {
       totalSlots: totalSlots || 1,
       availableSlots: totalSlots || 1,
       location: {
-        latitude: latitude || 23.0225,
-        longitude: longitude || 72.5714,
+        type: 'Point',
+        coordinates: [longitude || 72.5714, latitude || 23.0225]
       },
       openingTime: openingTime || '08:00',
       closingTime: closingTime || '22:00',
     });
+    
+    cache.flushAll(); // Invalidate cache
     res.status(201).json({ success: true, data: spot });
   } catch (err) {
     next(err);
@@ -83,6 +96,8 @@ export const updateSpot = async (req, res, next) => {
     ).lean();
     
     if (!spot) return res.status(404).json({ success: false, message: 'Spot not found or unauthorized' });
+    
+    cache.flushAll(); // Invalidate cache
     res.json({ success: true, data: spot });
   } catch (err) {
     next(err);
@@ -95,6 +110,8 @@ export const deleteSpot = async (req, res, next) => {
   try {
     const spot = await ParkingSpace.findOneAndDelete({ _id: req.params.id, providerId: req.user._id });
     if (!spot) return res.status(404).json({ success: false, message: 'Spot not found or unauthorized' });
+    
+    cache.flushAll(); // Invalidate cache
     res.json({ success: true, message: 'Spot removed' });
   } catch (err) {
     next(err);
@@ -113,6 +130,8 @@ export const approveSpot = async (req, res, next) => {
     ).lean();
     
     if (!spot) return res.status(404).json({ success: false, message: 'Spot not found' });
+    
+    cache.flushAll(); // Invalidate cache
     res.json({ success: true, data: spot });
   } catch (err) {
     next(err);

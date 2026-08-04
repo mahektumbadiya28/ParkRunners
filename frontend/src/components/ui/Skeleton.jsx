@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export default function Skeleton({ className = '', variant = 'rectangular' }) {
-  const baseClass = "bg-[var(--border-color)] animate-pulse";
+  const baseClass = "skeleton";
   const variants = {
     rectangular: "rounded-xl",
     circular: "rounded-full",

@@ -65,9 +65,10 @@ export default function ParkingMap() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className="w-80 flex-shrink-0 bg-[var(--bg-card)] border-r border-[var(--border-color)] flex flex-col">
-        {/* Header */}
-        <div className="px-5 py-5 border-b border-[var(--border-color)]">
+        <aside className="w-80 flex-shrink-0 bg-transparent flex flex-col relative z-10 p-4">
+          <div className="glass-panel flex-1 flex flex-col overflow-hidden rounded-2xl shadow-xl">
+            {/* Header / Search */}
+            <div className="p-4 border-b border-[var(--glass-border)] shrink-0">
           <div className="flex items-center gap-3 mb-4">
             <button onClick={() => navigate('/owner')} className="p-2 rounded-xl hover:bg-[var(--bg-card-hover)] transition-all text-[var(--text-muted)]">
               <ArrowLeft className="w-4 h-4" />
@@ -127,27 +128,33 @@ export default function ParkingMap() {
             </motion.div>
           ))}
         </div>
+      </div>
       </aside>
 
       {/* Map */}
       <main className="flex-1 relative">
         <MapContainer center={[23.0225, 72.5714]} zoom={13} className="w-full h-full z-0">
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; OpenStreetMap contributors'
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png"
           />
           {spots.map(spot => {
-            const latitude = spot.location?.latitude || spot.latitude || spot.lat;
-            const longitude = spot.location?.longitude || spot.longitude || spot.lng;
+            let latitude, longitude;
+            if (spot.location?.type === 'Point' && Array.isArray(spot.location.coordinates)) {
+              longitude = spot.location.coordinates[0];
+              latitude = spot.location.coordinates[1];
+            } else {
+              latitude = spot.location?.latitude || spot.latitude || spot.lat;
+              longitude = spot.location?.longitude || spot.longitude || spot.lng;
+            }
             if (!latitude || !longitude) return null;
             return (
               <Marker key={spot._id} position={[latitude, longitude]}>
-                <Popup>
+                <Popup className="glass-panel text-[var(--text-primary)] border-0">
                   <div className="min-w-[180px]">
                     <p className="font-bold text-sm mb-1">{spot.parkingName || spot.address}</p>
-                    <p className="text-xs text-gray-500 mb-2">₹{spot.hourlyPrice}/hr · {spot.availableSlots > 0 ? '🟢 Available' : '🔴 Full'}</p>
+                    <p className="text-xs text-[var(--text-muted)] mb-2">₹{spot.hourlyPrice}/hr · {spot.availableSlots > 0 ? '🟢 Available' : '🔴 Full'}</p>
                     {spot.availableSlots > 0 && (
-                      <button onClick={() => handleBook(spot)} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all">
+                      <button onClick={() => handleBook(spot)} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all shadow-[0_0_15px_rgba(99,102,241,0.4)]">
                         Book This Spot
                       </button>
                     )}

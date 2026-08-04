@@ -22,8 +22,16 @@ const parkingSpaceSchema = new mongoose.Schema({
     trim: true,
   },
   location: {
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true }
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true
+    }
   },
   vehicleTypes: {
     type: [String],
@@ -69,7 +77,7 @@ const parkingSpaceSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-parkingSpaceSchema.index({ 'location.latitude': 1, 'location.longitude': 1 });
+parkingSpaceSchema.index({ location: '2dsphere' });
 
 const ParkingSpace = mongoose.model('ParkingSpace', parkingSpaceSchema);
 export default ParkingSpace;

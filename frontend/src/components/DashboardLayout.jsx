@@ -9,6 +9,7 @@ import {
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import AnimatedPage from './ui/AnimatedPage';
 
 function NavItem({ icon: Icon, label, to, active, onClick }) {
   const className = `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
@@ -170,7 +171,7 @@ export default function DashboardLayout({ children, navItems = [], topNavItems =
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Bar */}
-        <header className="h-16 flex items-center justify-between px-6 bg-[var(--bg-card)] border-b border-[var(--border-color)] flex-shrink-0 relative">
+        <header className="h-16 flex items-center justify-between px-6 glass-panel border-b border-[var(--glass-border)] flex-shrink-0 relative z-20">
           
           <div className="flex items-center gap-4 flex-1">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-xl hover:bg-[var(--bg-card-hover)] transition-all">
@@ -299,14 +300,12 @@ export default function DashboardLayout({ children, navItems = [], topNavItems =
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            {children}
-          </motion.div>
+        <main className="flex-1 overflow-y-auto p-6 relative">
+          <AnimatePresence mode="wait">
+            <AnimatedPage key={location.pathname + location.search}>
+              {children}
+            </AnimatedPage>
+          </AnimatePresence>
         </main>
       </div>
     </div>

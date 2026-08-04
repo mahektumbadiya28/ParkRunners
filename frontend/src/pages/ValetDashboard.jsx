@@ -121,7 +121,7 @@ export default function ValetDashboard() {
             {loading ? (
               [1, 2, 3].map(i => <div key={i} className="skeleton h-44 w-full rounded-2xl" />)
             ) : jobs.length === 0 ? (
-              <div className="card-premium py-16 text-center">
+              <div className="glass-panel py-16 text-center">
                 <Car className="w-10 h-10 mx-auto mb-3 text-[var(--text-muted)] opacity-40" />
                 <p className="font-semibold text-[var(--text-primary)]">No jobs right now</p>
                 <p className="text-sm text-[var(--text-muted)]">New bookings will appear here automatically.</p>
@@ -133,7 +133,7 @@ export default function ValetDashboard() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.07 }}
-                  className="card-premium p-6"
+                  className="glass-panel p-6"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -179,7 +179,7 @@ export default function ValetDashboard() {
       )}
 
       {activeTab === 'jobs' && (
-        <div className="card-premium p-6 text-center">
+        <div className="glass-panel p-6 text-center">
           <Car className="w-10 h-10 mx-auto mb-3 text-[var(--text-muted)] opacity-40" />
           <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">Available Jobs</h3>
           <p className="text-[var(--text-muted)]">Check your dashboard for active jobs.</p>
@@ -219,7 +219,7 @@ export default function ValetDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column */}
             <div className="space-y-6">
-              <div className="card-premium p-6">
+              <div className="glass-panel p-6">
                 <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-blue-500" /> Driver Details</h4>
                 <div className="space-y-4">
                   <div>
@@ -237,7 +237,7 @@ export default function ValetDashboard() {
                 </div>
               </div>
 
-              <div className="card-premium p-6 bg-gradient-to-br from-blue-500/10 to-transparent border-blue-500/20">
+              <div className="glass-panel p-6 bg-gradient-to-br from-blue-500/10 to-transparent border-blue-500/20">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
                     <Briefcase className="w-5 h-5" />
@@ -252,7 +252,7 @@ export default function ValetDashboard() {
 
             {/* Right Column */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="card-premium p-6">
+              <div className="glass-panel p-6">
                 <h4 className="font-bold text-[var(--text-primary)] mb-6">Identity & Documents</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input label="Full Name" placeholder="Alex Valet" value={user?.name || user?.fullName || 'Alex Valet'} readOnly />
@@ -265,7 +265,7 @@ export default function ValetDashboard() {
                 </div>
               </div>
 
-              <div className="card-premium p-6 border-red-500/20 bg-red-500/5">
+              <div className="glass-panel p-6 border-red-500/20 bg-red-500/5">
                 <h4 className="font-bold text-red-500 mb-2">Resignation Request</h4>
                 <p className="text-xs text-[var(--text-muted)] mb-4">Request termination of your valet contract. Requires 14 days notice period.</p>
                 <Button variant="outline" className="text-red-500 border-red-500/30 hover:bg-red-500 hover:text-white">Submit Request</Button>
@@ -275,7 +275,7 @@ export default function ValetDashboard() {
         </motion.div>
       )}
       {/* {activeTab === 'settings' && (
-        <div className="card-premium p-6">
+        <div className="glass-panel p-6">
           <h3 className="text-xl font-bold text-[var(--text-primary)] mb-4">Account Settings</h3>
           <p className="text-[var(--text-muted)]">Account settings are coming soon.</p>
         </div>

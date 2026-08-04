@@ -6,9 +6,16 @@ import ParkingSpace from '../models/ParkingSpace.js';
 export const createBooking = async (req, res, next) => {
   try {
     const { spotId, startTime, endTime, vehicleId } = req.body;
-    const spot = await ParkingSpace.findById(spotId);
-    if (!spot || spot.status !== 'active') {
-      return res.status(400).json({ success: false, message: 'Spot not available' });
+    
+    // Atomic check and decrement to prevent race conditions
+    const spot = await ParkingSpace.findOneAndUpdate(
+      { _id: spotId, status: 'active', availableSlots: { $gt: 0 } },
+      { $inc: { availableSlots: -1 } },
+      { new: true }
+    );
+    
+    if (!spot) {
+      return res.status(400).json({ success: false, message: 'Spot not available or fully booked' });
     }
 
     const hours = Math.max(1, Math.ceil((new Date(endTime) - new Date(startTime)) / 3600000));
@@ -27,11 +34,6 @@ export const createBooking = async (req, res, next) => {
       bookingStatus: 'pending',
       paymentStatus: 'pending'
     });
-
-    if (spot.availableSlots > 0) {
-      spot.availableSlots -= 1;
-      await spot.save();
-    }
 
     res.status(201).json({ success: true, data: booking });
   } catch (err) {
@@ -60,13 +62,22 @@ export const getBookingById = async (req, res, next) => {
 // @route  GET /api/bookings
 export const myBookings = async (req, res, next) => {
   try {
-    const bookings = await Booking.find({ ownerId: req.user._id })
-      .populate('parkingId')
-      .populate('vehicleId')
-      .populate('valetId', 'fullName phone')
-      .sort('-createdAt')
-      .lean();
-    res.json({ success: true, count: bookings.length, data: bookings });
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = parseInt(req.query.skip) || 0;
+    
+    const [bookings, total] = await Promise.all([
+      Booking.find({ ownerId: req.user._id })
+        .populate('parkingId')
+        .populate('vehicleId')
+        .populate('valetId', 'fullName phone')
+        .sort('-createdAt')
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Booking.countDocuments({ ownerId: req.user._id })
+    ]);
+    
+    res.json({ success: true, count: bookings.length, total, data: bookings });
   } catch (err) {
     next(err);
   }
@@ -79,15 +90,23 @@ export const getProviderBookings = async (req, res, next) => {
     const mySpaces = await ParkingSpace.find({ providerId: req.user._id }).lean();
     const spaceIds = mySpaces.map(s => s._id);
 
-    const bookings = await Booking.find({ parkingId: { $in: spaceIds } })
-      .populate('parkingId')
-      .populate('ownerId', 'fullName email phone')
-      .populate('vehicleId')
-      .populate('valetId', 'fullName phone')
-      .sort('-createdAt')
-      .lean();
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = parseInt(req.query.skip) || 0;
 
-    res.json({ success: true, count: bookings.length, data: bookings });
+    const [bookings, total] = await Promise.all([
+      Booking.find({ parkingId: { $in: spaceIds } })
+        .populate('parkingId')
+        .populate('ownerId', 'fullName email phone')
+        .populate('vehicleId')
+        .populate('valetId', 'fullName phone')
+        .sort('-createdAt')
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Booking.countDocuments({ parkingId: { $in: spaceIds } })
+    ]);
+
+    res.json({ success: true, count: bookings.length, total, data: bookings });
   } catch (err) {
     next(err);
   }

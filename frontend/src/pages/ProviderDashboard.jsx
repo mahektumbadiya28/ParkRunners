@@ -308,7 +308,7 @@ export default function ProviderDashboard() {
       <div className="space-y-6">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="card-premium p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
+          <div className="glass-panel p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
             <div>
               <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-wider">Total Spaces</p>
               <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">{totalSpots}</h3>
@@ -319,7 +319,7 @@ export default function ProviderDashboard() {
             </div>
           </div>
 
-          <div className="card-premium p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
+          <div className="glass-panel p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
             <div>
               <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-wider">Occupancy Rate</p>
               <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">{occupancyRate}%</h3>
@@ -332,7 +332,7 @@ export default function ProviderDashboard() {
             </div>
           </div>
 
-          <div className="card-premium p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
+          <div className="glass-panel p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
             <div>
               <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-wider">Total Bookings</p>
               <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">{bookings.length}</h3>
@@ -343,7 +343,7 @@ export default function ProviderDashboard() {
             </div>
           </div>
 
-          <div className="card-premium p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
+          <div className="glass-panel p-5 flex items-center justify-between hover:scale-[1.02] transition-all">
             <div>
               <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-wider">Net Earnings</p>
               <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">₹{totalEarnings}</h3>
@@ -411,7 +411,7 @@ export default function ProviderDashboard() {
         {/* Mini Charts & Table */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Space mini overview list */}
-          <div className="card-premium p-6">
+          <div className="glass-panel p-6">
             <h3 className="font-bold text-[var(--text-primary)] mb-4">My Spaces</h3>
             <div className="space-y-3">
               {spots.slice(0, 3).map(spot => (
@@ -433,7 +433,7 @@ export default function ProviderDashboard() {
           </div>
 
           {/* Realtime Live Activity Feed */}
-          <div className="card-premium p-6">
+          <div className="glass-panel p-6">
             <h3 className="font-bold text-[var(--text-primary)] mb-4 flex items-center justify-between">
               <span>Live Reservations</span>
               <span className="flex h-2.5 w-2.5 relative">
@@ -473,7 +473,7 @@ export default function ProviderDashboard() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {spots.length === 0 ? (
-            <div className="col-span-full card-premium py-16 text-center">
+            <div className="col-span-full glass-panel py-16 text-center">
               <MapPin className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3 opacity-30" />
               <h4 className="font-bold text-[var(--text-primary)]">No Listings Found</h4>
               <p className="text-sm text-[var(--text-muted)] mt-1">Get started by creating a new parking listing.</p>
@@ -481,7 +481,7 @@ export default function ProviderDashboard() {
             </div>
           ) : (
             spots.map(spot => (
-              <div key={spot._id} className="card-premium overflow-hidden group hover:shadow-2xl hover:scale-[1.01] transition-all flex flex-col justify-between">
+              <div key={spot._id} className="glass-panel overflow-hidden group hover:shadow-2xl hover:scale-[1.01] transition-all flex flex-col justify-between">
                 <div>
                   {/* Image Header */}
                   <div className="h-44 bg-indigo-950/20 relative overflow-hidden">
@@ -536,7 +536,7 @@ export default function ProviderDashboard() {
 
     {/* TAB: ADD SPACE */}
     {activeTab === 'add-space' && (
-      <div className="max-w-2xl mx-auto card-premium p-6">
+      <div className="max-w-2xl mx-auto glass-panel p-6">
         {/* Steps header indicator */}
         <div className="flex justify-between items-center mb-6 pb-6 border-b border-[var(--border-color)]">
           {[1, 2, 3, 4, 5].map(step => (
@@ -765,7 +765,7 @@ export default function ProviderDashboard() {
           </div>
         </div>
 
-        <div className="card-premium overflow-hidden">
+        <div className="glass-panel overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
@@ -833,19 +833,19 @@ export default function ProviderDashboard() {
     {activeTab === 'earnings' && (
       <div className="space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="card-premium p-6">
+          <div className="glass-panel p-6">
             <span className="text-xs text-[var(--text-muted)] font-bold">Total Earnings</span>
             <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">₹{totalEarnings}</h3>
             <p className="text-[10px] text-emerald-400 mt-1">Completed & Paid Payouts</p>
           </div>
-          <div className="card-premium p-6">
+          <div className="glass-panel p-6">
             <span className="text-xs text-[var(--text-muted)] font-bold">Pending Payouts</span>
             <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">
               ₹{payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0)}
             </h3>
             <p className="text-[10px] text-yellow-400 mt-1">Processing to bank account</p>
           </div>
-          <div className="card-premium p-6">
+          <div className="glass-panel p-6">
             <span className="text-xs text-[var(--text-muted)] font-bold">Refunded & Cancelled</span>
             <h3 className="text-3xl font-black text-[var(--text-primary)] mt-1">
               ₹{payments.filter(p => p.status === 'refunded').reduce((sum, p) => sum + p.amount, 0)}
@@ -854,7 +854,7 @@ export default function ProviderDashboard() {
           </div>
         </div>
 
-        <div className="card-premium p-5">
+        <div className="glass-panel p-5">
           <h3 className="font-bold text-[var(--text-primary)] mb-4">Transaction Records</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
@@ -899,7 +899,7 @@ export default function ProviderDashboard() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Revenue Growth Trend Chart */}
-          <div className="card-premium p-5">
+          <div className="glass-panel p-5">
             <h3 className="font-bold text-[var(--text-primary)] mb-4 flex items-center justify-between text-sm">
               <span>Monthly Revenue Trend</span>
               <TrendingUp className="w-4 h-4 text-indigo-400" />
@@ -931,7 +931,7 @@ export default function ProviderDashboard() {
           </div>
 
           {/* Booking Trends Chart */}
-          <div className="card-premium p-5">
+          <div className="glass-panel p-5">
             <h3 className="font-bold text-[var(--text-primary)] mb-4 text-sm">Booking Trends</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -962,14 +962,14 @@ export default function ProviderDashboard() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {reviews.length === 0 ? (
-            <div className="col-span-full card-premium py-16 text-center">
+            <div className="col-span-full glass-panel py-16 text-center">
               <MessageSquare className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3 opacity-30" />
               <h4 className="font-bold text-[var(--text-primary)]">No Reviews Yet</h4>
               <p className="text-sm text-[var(--text-muted)] mt-1">Car owners rating summaries will display here.</p>
             </div>
           ) : (
             reviews.map(r => (
-              <div key={r._id} className="card-premium p-5 space-y-3">
+              <div key={r._id} className="glass-panel p-5 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-400">
@@ -1026,7 +1026,7 @@ export default function ProviderDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="space-y-6">
-            <div className="card-premium p-6">
+            <div className="glass-panel p-6">
               <h4 className="font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2"><User className="w-4 h-4 text-purple-500" /> Host Details</h4>
               <div className="space-y-4">
                 <div>
@@ -1044,7 +1044,7 @@ export default function ProviderDashboard() {
               </div>
             </div>
 
-            <div className="card-premium p-6 bg-gradient-to-br from-purple-500/10 to-transparent border-purple-500/20">
+            <div className="glass-panel p-6 bg-gradient-to-br from-purple-500/10 to-transparent border-purple-500/20">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
                   <Award className="w-5 h-5" />
@@ -1059,7 +1059,7 @@ export default function ProviderDashboard() {
 
           {/* Right Column */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="card-premium p-6">
+            <div className="glass-panel p-6">
               <h4 className="font-bold text-[var(--text-primary)] mb-6">KYC Registration & GST Invoicing</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input label="Business Name" placeholder="VolenPark Host Co." value={user?.name || user?.fullName || "VolenPark Host Co."} readOnly />
@@ -1072,7 +1072,7 @@ export default function ProviderDashboard() {
               </div>
             </div>
 
-            <div className="card-premium p-6 border-red-500/20 bg-red-500/5">
+            <div className="glass-panel p-6 border-red-500/20 bg-red-500/5">
               <h4 className="font-bold text-red-500 mb-2">Deactivate Partner Account</h4>
               <p className="text-xs text-[var(--text-muted)] mb-4">Temporarily unlist all your parking spots and pause payouts.</p>
               <Button variant="outline" className="text-red-500 border-red-500/30 hover:bg-red-500 hover:text-white">Deactivate Account</Button>
