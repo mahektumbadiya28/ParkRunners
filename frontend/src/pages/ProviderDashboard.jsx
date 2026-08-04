@@ -356,48 +356,48 @@ export default function ProviderDashboard() {
 
         {/* AI Insights & Dynamic Pricing Dashboard Card */}
         {analytics?.aiInsights && (
-          <div className="relative overflow-hidden rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/20 to-slate-900/50 p-6 backdrop-blur-2xl">
+          <div className="relative overflow-hidden rounded-3xl border border-indigo-500/20 glass-panel p-6">
             <div className="absolute top-0 right-0 p-8 opacity-5 text-indigo-400">
               <Award className="w-48 h-48" />
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Badge variant="purple">AI Business Hub</Badge>
-              <span className="text-xs text-indigo-300 font-medium">Random Forest & Regression Active</span>
+              <span className="text-xs text-indigo-500 dark:text-indigo-300 font-medium">Random Forest & Regression Active</span>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-400">Expected Weekly Revenue</h4>
-                  <p className="text-3xl font-black text-white mt-1">₹{analytics.aiInsights.expectedWeeklyRevenue}</p>
+                  <h4 className="text-sm font-semibold text-[var(--text-secondary)]">Expected Weekly Revenue</h4>
+                  <p className="text-3xl font-black text-[var(--text-primary)] mt-1">₹{analytics.aiInsights.expectedWeeklyRevenue}</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-400">AI Suggested Price Multiplier</h4>
+                  <h4 className="text-sm font-semibold text-[var(--text-secondary)]">AI Suggested Price Multiplier</h4>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-2xl font-extrabold text-indigo-400">x{analytics.aiInsights.suggestedPricingMultiplier}</span>
+                    <span className="text-2xl font-extrabold text-indigo-500">x{analytics.aiInsights.suggestedPricingMultiplier}</span>
                     <Badge variant="success">+{Math.round((analytics.aiInsights.suggestedPricingMultiplier - 1) * 100)}% Surge</Badge>
                   </div>
                 </div>
               </div>
 
-              <div className="border-l border-gray-800 pl-6 space-y-4">
+              <div className="border-l border-[var(--border-color)] pl-6 space-y-4">
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-400">Business Health Score</h4>
-                  <p className="text-3xl font-black text-emerald-400 mt-1">{analytics.aiInsights.businessHealthScore}/100</p>
+                  <h4 className="text-sm font-semibold text-[var(--text-secondary)]">Business Health Score</h4>
+                  <p className="text-3xl font-black text-emerald-500 mt-1">{analytics.aiInsights.businessHealthScore}/100</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-400">Expected Daily Demand</h4>
-                  <div className="w-full bg-gray-800 rounded-full h-2 mt-2">
+                  <h4 className="text-sm font-semibold text-[var(--text-secondary)]">Expected Daily Demand</h4>
+                  <div className="w-full bg-[var(--border-color)] rounded-full h-2 mt-2">
                     <div className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-2 rounded-full" style={{ width: `${analytics.aiInsights.expectedDemand * 100}%` }} />
                   </div>
                 </div>
               </div>
 
-              <div className="border-l border-gray-800 pl-6 flex flex-col justify-between">
-                <h4 className="text-sm font-semibold text-gray-400 mb-2">Dynamic System Suggestions</h4>
-                <ul className="space-y-2 text-xs text-gray-300">
+              <div className="border-l border-[var(--border-color)] pl-6 flex flex-col justify-between">
+                <h4 className="text-sm font-semibold text-[var(--text-secondary)] mb-2">Dynamic System Suggestions</h4>
+                <ul className="space-y-2 text-xs text-[var(--text-primary)]">
                   {analytics.aiInsights.suggestions.map((s, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-indigo-400 mt-0.5">•</span>
+                      <span className="text-indigo-500 mt-0.5">•</span>
                       <span>{s}</span>
                     </li>
                   ))}
